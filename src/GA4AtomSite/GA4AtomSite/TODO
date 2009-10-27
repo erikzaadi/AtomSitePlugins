@@ -1,0 +1,8 @@
+﻿Add build step to create zip
+finish xml
+override more IPlugin methods (especially setup related)
+
+Where do I add this ? , make configurable? Exclude admin pages? 
+ <svc:area name="tail">
+      <svc:include name="Ga4AtomSiteWidget" GoogleAnalyticsID="asdasd" />
+    </svc:area>
