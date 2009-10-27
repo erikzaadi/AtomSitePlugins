@@ -14,7 +14,7 @@
     <plug:description>Provides a Google Analytics tracker, with support for javascript disabled browsers</plug:description>
     <!--<plug:file name="js\jquery.tools-1.1.1.min.js" />-->
   </plug:widget>
-  <plug:homepage>http://github.com/erikzaadi/AtomSitePlugins/GA4AtomSite</plug:homepage>
+  <plug:homepage>http://github.com/erikzaadi/AtomSitePlugins/tree/master/src/GA4AtomSite/ </plug:homepage>
   <atom:content type="xhtml">
     <div xmlns="http://www.w3.org/1999/xhtml">
       <!--Add description..-->

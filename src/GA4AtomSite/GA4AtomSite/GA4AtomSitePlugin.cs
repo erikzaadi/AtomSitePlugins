@@ -16,6 +16,20 @@ namespace GA4AtomSite
         public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
         {
             RegisterWidget<Ga4AtomSiteWidget>(container);
+            RegisterPage(container, "GA4AtomSite");
+            RegisterController<GA4AtomSiteController>(container);
+        }
+
+        public override AtomSite.Domain.PluginState Setup(StructureMap.IContainer container, string appPath)
+        {
+            /*
+            var x = new AtomSite.Domain.Include()
+            SetupIncludeInPageArea(container, "BlogListing", "tail",  );
+            SetupIncludeInPageArea(container, "BlogListing", "tail", "Ga4AtomSiteWidget");
+            SetupIncludeInPageArea(container, "BlogListing", "tail", "Ga4AtomSiteWidget");
+            SetupIncludeInPageArea(container, "BlogListing", "tail", "Ga4AtomSiteWidget");
+            */
+            return base.Setup(container, appPath);
         }
     }
 }

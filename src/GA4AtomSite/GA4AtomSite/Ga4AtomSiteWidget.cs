@@ -20,16 +20,12 @@ namespace GA4AtomSite
             return base.IsEnabled(baseModel, include);
         }
 
-        public override void UpdatePageModel(PageModel pageModel, AtomSite.Domain.Include include)
-        {
-        }
-
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)
         {
-            string GoogleAnalyticsID = include.Xml.Attributes().Where(a => a.Name == "GoogleAnalyticsID").Select(p => p.Value).SingleOrDefault();
+            //string GoogleAnalyticsID = include.Xml.Attributes().Where(a => a.Name == "GoogleAnalyticsID").Select(p => p.Value).SingleOrDefault();
+            string GoogleAnalyticsID = GA4AtomSiteUtils.CurrentGoogleAnalyticsID;
             if (string.IsNullOrEmpty(GoogleAnalyticsID))
             {
-                //Log message?
                 if (LogService != null)
                     LogService.Error("GoogleAnalyticsID missing (Ga4AtomSiteWidget)");
             }
