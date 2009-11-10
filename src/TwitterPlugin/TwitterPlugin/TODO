@@ -1,6 +1,14 @@
-﻿http://linqtotwitter.codeplex.com/WorkItem/View.aspx?WorkItemId=24403
-
-CSS
+﻿CSS
 Automatically link mentions and urls
-Move markup to view?
-Setup via controller -> Tools?
+
+JS and CSS in Admin? -> Open a codeplex issue?
+
+Finish SetupWidget-> JS / Form to submit to 
+Cache Twitter requests
+Cache Twitter Replyto users in a name value collection?
+
+Zip as build step?
+
+post + page at blog for homepage
+
+Proper setup for zip distribution -> XML invalid?

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AtomSite.WebCore;
+using System.Xml.Linq;
 
-namespace TwitterPlugin
+namespace TwitterPluginForAtomSite
 {
     public class TwitterPlugin : AtomSite.WebCore.BasePlugin
     {
@@ -14,7 +15,21 @@ namespace TwitterPlugin
         }
         public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
         {
-            RegisterWidget<TwitterWidget>(container);
+            RegisterCompositeWidget(container, "TwitterWidget", "Twitter", "List", new string[] { "TwitterPlugin.css", "TwitterPlugin.js" });
+            RegisterCompositeWidget(container, "TwitterSetupWidget", "Twitter", "Setup", new string[] { "TwitterPlugin.css", "TwitterPlugin.js" });
+            RegisterController<TwitterController>(container);
+        }
+
+        public override AtomSite.Domain.PluginState Setup(StructureMap.IContainer container, string appPath)
+        {
+            LogService.Info("Setting up Twitter Plugin");
+
+            base.SetupIncludeInPageArea(container, "BlogHome", "sidemid", "TwitterWidget");
+            base.SetupIncludeInPageArea(container, "AdminSettingsEntireSite", "settingsLeft", "TwitterSetupWidget");
+
+            LogService.Info("Finished Setting up Twitter Plugin");
+
+            return base.Setup(container, appPath);
         }
     }
 }

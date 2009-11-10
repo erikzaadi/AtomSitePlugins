@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterPlugin", "TwitterPlugin\TwitterPlugin.csproj", "{204F01BF-FD26-49FC-B05A-25563DCF9C0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterPluginForAtomSite", "TwitterPlugin\TwitterPluginForAtomSite.csproj", "{204F01BF-FD26-49FC-B05A-25563DCF9C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
