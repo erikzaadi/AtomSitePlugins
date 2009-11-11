@@ -7,15 +7,21 @@ namespace TwitterPluginForAtomSite
 {
     public class TwitterStructs
     {
+        public const string TwitterConfigFileName = "Twitter.config";
+        public const string TwitterConfigRootElement = "TwitterSettings";
+        public const string TwitterConfigUserElement = "Username";
+        public const string TwitterConfigLimitElement = "Limit";
+        public const string TwitterCurrentSettings = "TwitterCurrentSettings";
+        public const string TwitterUser = "TwitterUser-";
+        public const string TwitterCurrentTweets = "TwitterCurrentTweets";
+
         public class Tweet
         {
             public string Text { get; set; }
             public DateTime CreatedAt { get; set; }
             public string Source { get; set; }
-            public User InReplyTo { get { return !string.IsNullOrEmpty(InReplyToUserID) ? TwitterInteraction.GetTwitterUser(InReplyToUserID) : null; } }
-            public string InReplyToUserID { get; set; }
-            public string InReplyToStatusID { get; set; }
-            public string InReplyToStatusURL { get { return InReplyTo != null && !string.IsNullOrEmpty(InReplyToStatusID) ? string.Format("http://twitter.com/{0}/status/{1}", InReplyTo.ScreenName, InReplyToStatusID) : ""; } }
+            public string InReplyToStatusURL { get; set; }
+            public string InReplyToScreenName { get; set; }
         }
         public class User
         {
@@ -25,7 +31,11 @@ namespace TwitterPluginForAtomSite
             public string HomeURL { get; set; }
             public string ImageURL { get; set; }
             public string TwitterHomeURL { get; set; }
-        }
+            public string Followers { get; set; }
+            public string FriendsCount { get; set; }
+            public string StatusCount { get; set; }
+            public string Description { get; set; }
+       }
         public class Twitter
         {
             public User User { get; set; }

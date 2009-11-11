@@ -8,13 +8,15 @@ namespace TwitterPluginForAtomSite
 {
     public class TwitterInteraction
     {
-        public static TwitterStructs.Twitter GetUpdates(string TwitterName)
+        public static TwitterStructs.Twitter GetUpdates(System.Web.Caching.Cache cache, string TwitterName)
         {
-            return GetUpdates(TwitterName, 5);
+            return GetUpdates(cache, TwitterName, 5);
         }
 
-        public static TwitterStructs.Twitter GetUpdates(string TwitterName, int Limit)
+        public static TwitterStructs.Twitter GetUpdates(System.Web.Caching.Cache cache, string TwitterName, int Limit)
         {
+            if (cache != null && cache[TwitterStructs.TwitterCurrentTweets] != null)
+                return (TwitterStructs.Twitter)cache[TwitterStructs.TwitterCurrentTweets];
             var webClient = new System.Net.WebClient();
             string url = string.Format("http://twitter.com/status/user_timeline/{0}.xml?count={1}", TwitterName, Limit);
             string resultXML = webClient.DownloadString(url);
@@ -37,17 +39,23 @@ namespace TwitterPluginForAtomSite
             var user = from u in statusArray.Take(1).Descendants("user")
                        select new TwitterStructs.User
                        {
-                           ID = u.Element("id").Value,
-                           ImageURL = u.Element("profile_image_url").Value,
-                           ScreenName = u.Element("screen_name").Value,
-                           HomeURL = u.Element("url").Value,
-                           Name = u.Element("name").Value,
-                           TwitterHomeURL = string.Format("http://twitter.com/{0}", u.Element("screen_name").Value)
+                           ID = ElementValueSingleOrDefault(u, "id"),
+                           ImageURL = ElementValueSingleOrDefault(u, "profile_image_url"),
+                           ScreenName = ElementValueSingleOrDefault(u, "screen_name"),
+                           HomeURL = ElementValueSingleOrDefault(u, "url"),
+                           Name = ElementValueSingleOrDefault(u, "name"),
+                           TwitterHomeURL = string.Format("http://twitter.com/{0}", ElementValueSingleOrDefault(u, "screen_name")),
+                           Description = ElementValueSingleOrDefault(u, "description"),
+                           Followers = ElementValueSingleOrDefault(u, "followers_count"),
+                           FriendsCount = ElementValueSingleOrDefault(u, "friends_count"),
+                           StatusCount = ElementValueSingleOrDefault(u, "statuses_count"),
                        };
             toReturn.User = user.SingleOrDefault();
             var tweets = from tw in statusArray
                          let dateParts =
-                         tw.Element("created_at").Value.Split(' ')
+                         ElementValueSingleOrDefault(tw, "created_at").Split(' ')
+                         let replyToScreenName =
+                         ElementValueSingleOrDefault(tw, "in_reply_to_screen_name")
                          select new TwitterStructs.Tweet
                          {
                              CreatedAt = DateTime.Parse(
@@ -57,20 +65,37 @@ namespace TwitterPluginForAtomSite
                                  dateParts[5],
                                  dateParts[3]),
                                  System.Globalization.CultureInfo.InvariantCulture),
-                             Source = tw.Element("source").Value,
-                             Text = tw.Element("text").Value,
-                             InReplyToStatusID = tw.Element("in_reply_to_status_id").Value,
-                             InReplyToUserID = tw.Element("in_reply_to_user_id").Value
+                             Source = ElementValueSingleOrDefault(tw, "source"),
+                             Text = ElementValueSingleOrDefault(tw, "text"),
+                             InReplyToScreenName = replyToScreenName,
+                             InReplyToStatusURL = !string.IsNullOrEmpty(replyToScreenName) ? string.Format("http://twitter.com/{0}/status/{1}", replyToScreenName, ElementValueSingleOrDefault(tw, "in_reply_to_user_id")) : ""
                          };
             toReturn.Tweets = tweets.ToList();
+            if (cache != null)
+                cache[TwitterStructs.TwitterCurrentTweets] = toReturn;
             return toReturn;
         }
 
-        public static TwitterStructs.User GetTwitterUser(string TwitterName)
+        private static string ElementValueSingleOrDefault(XElement element, string name)
         {
+            return element.Element(name) != null && !string.IsNullOrEmpty(element.Element(name).Value) ? element.Element(name).Value : "";
+        }
+
+        public static TwitterStructs.User GetTwitterUser(System.Web.Caching.Cache cache, string TwitterName)
+        {
+            if (cache != null && cache[TwitterStructs.TwitterUser + TwitterName] != null)
+                return (TwitterStructs.User)cache[TwitterStructs.TwitterUser + TwitterName];
             var webClient = new System.Net.WebClient();
             string url = string.Format("http://twitter.com/users/show/{0}.xml", TwitterName);
-            string resultXML = webClient.DownloadString(url);
+            string resultXML = string.Empty;
+            try
+            {
+                resultXML = webClient.DownloadString(url);
+            }
+            catch
+            {
+                return null;
+            }
             if (string.IsNullOrEmpty(resultXML))
                 return null;
 
@@ -93,9 +118,16 @@ namespace TwitterPluginForAtomSite
                            ScreenName = u.Element("screen_name").Value,
                            HomeURL = u.Element("url").Value,
                            Name = u.Element("name").Value,
-                           TwitterHomeURL = string.Format("http://twitter.com/{0}", u.Element("screen_name").Value)
+                           TwitterHomeURL = string.Format("http://twitter.com/{0}", u.Element("screen_name").Value),
+                           Description = ElementValueSingleOrDefault(u, "description"),
+                           Followers = ElementValueSingleOrDefault(u, "followers_count"),
+                           FriendsCount = ElementValueSingleOrDefault(u, "friends_count"),
+                           StatusCount = ElementValueSingleOrDefault(u, "statuses_count")
                        };
-            return user.SingleOrDefault();
+            var toReturn = user.SingleOrDefault();
+            if (cache != null)
+                cache[TwitterStructs.TwitterUser + TwitterName] = toReturn;
+            return toReturn;
         }
 
     }

@@ -10,14 +10,19 @@
 					{ %>
 						<div class="TwitterStatus">
 							<div class="TwitterStatusText"><%= p.Text %></div>
-							<% if (p.InReplyTo != null) 
-								{ %>
-									<div class="TwitterInResponseTo">
-										In reply to <a href="<%= p.InReplyToStatusURL %>"><%= p.InReplyTo.Name %></a>..
-									</div>
-								<% } %>
-							<div class="TwitterStatusTime">
+							<div class="TwitterStatusFooter">
+							<span class="TwitterStatusTime">
 								<%= Html.DateTimeAgoAbbreviation(p.CreatedAt) %>
+							</span>&nbsp;from
+							<span class="TwitterStatusSource">
+								<%= p.Source %>
+							</span>&nbsp;
+							<% if (!string.IsNullOrEmpty(p.InReplyToScreenName)) 
+								{ %>
+									<span class="TwitterInResponseTo">
+										<a href="<%= p.InReplyToStatusURL %>">In reply to <%= p.InReplyToScreenName%></a>..
+									</span>
+								<% } %>
 							</div>
 						</div>
 				<% } %>

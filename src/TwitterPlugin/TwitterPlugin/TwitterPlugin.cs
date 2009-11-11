@@ -15,8 +15,8 @@ namespace TwitterPluginForAtomSite
         }
         public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
         {
-            RegisterCompositeWidget(container, "TwitterWidget", "Twitter", "List", new string[] { "TwitterPlugin.css", "TwitterPlugin.js" });
-            RegisterCompositeWidget(container, "TwitterSetupWidget", "Twitter", "Setup", new string[] { "TwitterPlugin.css", "TwitterPlugin.js" });
+            RegisterWidget<TwitterWidget>(container);
+            RegisterWidget<TwitterSetupWidget>(container);
             RegisterController<TwitterController>(container);
         }
 

@@ -13,23 +13,11 @@ namespace TwitterPluginForAtomSite
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Setup(string id, int? limit)
         {
-            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit);
+            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(HttpContext.Cache, id, limit);
             if (Request.IsAjaxRequest())
                 return Json(current);
             else
                 return RedirectToRoute(new { controller = "Admin" });
-        }
-
-
-        [ScopeAuthorize]
-        public ActionResult Setup()
-        {
-            return PartialView("TwitterSetupWidget", new TwitterPluginForAtomSite.Models.SetupModel(TwitterPluginCore.GetCurrent()));
-        }
-
-        public ActionResult List()
-        {
-            return PartialView("TwitterWidget", new TwitterPluginForAtomSite.Models.ClientModel(TwitterPluginCore.GetUpdates()));
         }
     }
 }

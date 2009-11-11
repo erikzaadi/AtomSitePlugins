@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TwitterWidget.cs" />
     <Compile Include="TwitterInteraction.cs" />
     <Compile Include="Models\SetupModel.cs" />
     <Compile Include="TwitterPluginCore.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Models\ClientModel.cs" />
     <Compile Include="TwitterPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwitterSetupWidget.cs" />
     <Compile Include="TwitterStructs.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +109,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="Twitter.Plugin.1.0.0.0.xml">
+    <Content Include="Twitter.Plugin.1.3.0.0.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

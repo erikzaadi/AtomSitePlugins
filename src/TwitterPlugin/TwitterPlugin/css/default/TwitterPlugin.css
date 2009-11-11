@@ -1,4 +1,16 @@
 ﻿.TwitterWidget, .TwitterSetupWidget
 {
-	background-color : Yellow;
+}
+
+.TwitterSetupLabel
+{
+	width : 100px;
+	display : block;
+	float:left;
+	clear:both;
+}
+
+.TwitterSetupError
+{
+	color:Red;
 }

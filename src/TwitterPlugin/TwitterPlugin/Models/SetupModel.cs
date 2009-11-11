@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TwitterPluginForAtomSite.Models
 {
-    public class SetupModel : AtomSite.WebCore.PageModel
+    public class SetupModel : AtomSite.WebCore.BaseModel
     {
         public TwitterStructs.Settings TwitterSettings { get; set; }
 
@@ -13,7 +13,6 @@ namespace TwitterPluginForAtomSite.Models
         public SetupModel(TwitterStructs.Settings TwitterSettings)
         {
             this.TwitterSettings = TwitterSettings;
-        }   
-
+        }
     }
 }
