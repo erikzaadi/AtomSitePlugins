@@ -11,9 +11,12 @@ namespace TwitterPluginForAtomSite
     {
         [ScopeAuthorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Setup(string id, int? limit)
+        public ActionResult Setup(string id, int? limit, int? cachedurationinminutes)
         {
-            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(HttpContext.Cache, id, limit);
+            TimeSpan? cacheduration = null;
+            if (cachedurationinminutes.HasValue)
+                cacheduration = new TimeSpan(0, cachedurationinminutes.Value, 0);
+            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cacheduration, HttpContext.Cache);
             if (Request.IsAjaxRequest())
                 return Json(current);
             else

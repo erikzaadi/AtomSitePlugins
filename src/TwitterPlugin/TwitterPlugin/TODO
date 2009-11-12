@@ -1,8 +1,4 @@
-﻿Automatically link mentions and urls +1
-Design and style Twitter Client Widget
-
-
-Zip as build step?
+﻿Zip as build step?
 post + page at blog for homepage
 
-Proper setup for zip distribution -> XML invalid?
+Proper setup for zip distribution -> Bug with content-type being null..

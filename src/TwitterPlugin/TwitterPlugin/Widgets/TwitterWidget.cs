@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
-namespace TwitterPluginForAtomSite
+namespace TwitterPluginForAtomSite.Widgets
 {
     public class TwitterWidget : AtomSite.WebCore.ViewWidget
     {
@@ -19,7 +19,8 @@ namespace TwitterPluginForAtomSite
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)
         {
             HtmlHelper helper = new HtmlHelper(ctx, new ViewDataContainer() { ViewData = ctx.ViewData });
-            System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, new Models.ClientModel { TwitterResponse = TwitterPluginCore.GetUpdates(ctx.HttpContext.Cache) });
+            var model = new Models.ClientModel { TwitterResponse = TwitterPluginCore.GetUpdates(ctx.HttpContext.Cache) };
+            System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, model);
         }
         class ViewDataContainer : IViewDataContainer
         {

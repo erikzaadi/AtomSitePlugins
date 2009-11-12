@@ -8,18 +8,31 @@ namespace TwitterPluginForAtomSite
 {
     public class TwitterInteraction
     {
-        public static TwitterStructs.Twitter GetUpdates(System.Web.Caching.Cache cache, string TwitterName)
+        public static TwitterStructs.Twitter GetUpdates(
+            System.Web.Caching.Cache Cache,
+            TimeSpan CacheDuration,
+            string TwitterName,
+            int Limit)
         {
-            return GetUpdates(cache, TwitterName, 5);
-        }
-
-        public static TwitterStructs.Twitter GetUpdates(System.Web.Caching.Cache cache, string TwitterName, int Limit)
-        {
-            if (cache != null && cache[TwitterStructs.TwitterCurrentTweets] != null)
-                return (TwitterStructs.Twitter)cache[TwitterStructs.TwitterCurrentTweets];
+            var cached = TwitterCacheManager.Get<TwitterStructs.Twitter>(
+                TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName,
+                Cache,
+                CacheDuration);
+            if (cached != null)
+                return cached;
             var webClient = new System.Net.WebClient();
-            string url = string.Format("http://twitter.com/status/user_timeline/{0}.xml?count={1}", TwitterName, Limit);
-            string resultXML = webClient.DownloadString(url);
+            string url = string.Format("http://twitter.com/status/user_timeline/{0}.xml?count={1}",
+                TwitterName,
+                Limit);
+            string resultXML = string.Empty;
+            try
+            {
+                resultXML = webClient.DownloadString(url);
+            }
+            catch
+            {
+                return null;
+            }
             if (string.IsNullOrEmpty(resultXML))
                 return null;
 
@@ -66,13 +79,14 @@ namespace TwitterPluginForAtomSite
                                  dateParts[3]),
                                  System.Globalization.CultureInfo.InvariantCulture),
                              Source = ElementValueSingleOrDefault(tw, "source"),
-                             Text = ElementValueSingleOrDefault(tw, "text"),
+                             Text = AddMarkupToTweet(ElementValueSingleOrDefault(tw, "text")),
                              InReplyToScreenName = replyToScreenName,
-                             InReplyToStatusURL = !string.IsNullOrEmpty(replyToScreenName) ? string.Format("http://twitter.com/{0}/status/{1}", replyToScreenName, ElementValueSingleOrDefault(tw, "in_reply_to_user_id")) : ""
+                             InReplyToStatusURL = !string.IsNullOrEmpty(replyToScreenName) ? string.Format("http://twitter.com/{0}/status/{1}", replyToScreenName, ElementValueSingleOrDefault(tw, "in_reply_to_status_id")) : ""
                          };
             toReturn.Tweets = tweets.ToList();
-            if (cache != null)
-                cache[TwitterStructs.TwitterCurrentTweets] = toReturn;
+            TwitterCacheManager.Set(toReturn,
+                TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName, 
+                Cache);
             return toReturn;
         }
 
@@ -81,10 +95,15 @@ namespace TwitterPluginForAtomSite
             return element.Element(name) != null && !string.IsNullOrEmpty(element.Element(name).Value) ? element.Element(name).Value : "";
         }
 
-        public static TwitterStructs.User GetTwitterUser(System.Web.Caching.Cache cache, string TwitterName)
+        public static TwitterStructs.User GetTwitterUser(System.Web.Caching.Cache Cache, TimeSpan CacheDuration, string TwitterName)
         {
-            if (cache != null && cache[TwitterStructs.TwitterUser + TwitterName] != null)
-                return (TwitterStructs.User)cache[TwitterStructs.TwitterUser + TwitterName];
+            var cached = TwitterCacheManager.Get<TwitterStructs.User>(
+                TwitterStructs.TwitterConsts.TwitterUser + TwitterName,
+                Cache,
+                CacheDuration);
+            if (cached != null)
+                return cached;
+
             var webClient = new System.Net.WebClient();
             string url = string.Format("http://twitter.com/users/show/{0}.xml", TwitterName);
             string resultXML = string.Empty;
@@ -125,9 +144,33 @@ namespace TwitterPluginForAtomSite
                            StatusCount = ElementValueSingleOrDefault(u, "statuses_count")
                        };
             var toReturn = user.SingleOrDefault();
-            if (cache != null)
-                cache[TwitterStructs.TwitterUser + TwitterName] = toReturn;
+            TwitterCacheManager.Set(toReturn, TwitterStructs.TwitterConsts.TwitterUser + TwitterName, Cache);
             return toReturn;
+        }
+
+        public static string AddMarkupToTweet(string Tweet)
+        {
+            string tagRegex = @"(\#)\w+[\w]";
+            string mentionRegex = @"(\@)\w+[\w]";
+            string linkRegex = @"((https|http):\/\/+[\w\d\.\-_\?\&\%\/\=\#]*)";
+
+            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(linkRegex);
+            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+            {
+                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusLink\"><a href=\"{0}\">{0}</a></span>", caught.Value));
+            }
+            reg = new System.Text.RegularExpressions.Regex(tagRegex);
+            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+            {
+                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusTag\"><a href=\"http://twitter.com/search?q=%23{0}\">{1}</a></span>", caught.Value.Substring(1, caught.Length - 1), caught.Value));
+            }
+            reg = new System.Text.RegularExpressions.Regex(mentionRegex);
+            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+            {
+                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusMention\">@<a href=\"http://twitter.com/{0}\">{0}</a></span>", caught.Value.Substring(1, caught.Length - 1)));
+            }
+
+            return Tweet;
         }
 
     }
