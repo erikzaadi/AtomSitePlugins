@@ -9,25 +9,15 @@ namespace GA4AtomSite
 {
     public class GA4AtomSiteController : System.Web.Mvc.Controller
     {
-        [ScopeAuthorize]
-        public ActionResult Setup()
-        {
-            return View("GA4AtomSiteSetup", "Admin", new GA4AtomSiteAdminModel(GA4AtomSiteUtils.CurrentGoogleAnalyticsID));
-        }
-
         [AcceptVerbs(HttpVerbs.Post)]
         [ScopeAuthorize]
         public ActionResult Set(string GAID)
         {
-            if (string.IsNullOrEmpty(GAID))
-            {
-                return View("GA4AtomSiteSetup", "Admin", new GA4AtomSiteAdminModel(""));
-            }
+            GA4AtomSiteUtils.CurrentGoogleAnalyticsID = GAID;
+            if (Request.IsAjaxRequest())
+                return Json(new { success = !string.IsNullOrEmpty(GAID), GAID = GAID });
             else
-            {
-                GA4AtomSiteUtils.CurrentGoogleAnalyticsID = GAID;
-                return View("GA4AtomSiteDone", "Admin", new GA4AtomSiteAdminModel(GAID));
-            }
+                return RedirectToRoute(new { controller = "Admin" });
         }
     }
 }

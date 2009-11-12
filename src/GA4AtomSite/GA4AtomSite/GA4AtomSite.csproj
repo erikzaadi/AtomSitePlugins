@@ -79,30 +79,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GA4AtomSiteAdminModel.cs" />
+    <Compile Include="GA4AtomSiteCacheManager.cs" />
+    <Compile Include="Models\GA4AtomSiteAdminModel.cs" />
     <Compile Include="GA4AtomSiteController.cs" />
     <Compile Include="GA4AtomSitePlugin.cs" />
     <Compile Include="GA4AtomSiteUtils.cs" />
-    <Compile Include="Ga4AtomSiteWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Widgets\Ga4AtomSiteAdminWidget.cs" />
+    <Compile Include="Widgets\Ga4AtomSiteWidget.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GA4AtomSiteSettings.config" />
     <Content Include="css\default\GA4AtomSite.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="js\default\GA4AtomSite.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="themes\default\GA4AtomSiteDone.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="GA4AtomSitePlugin.1.3.0.0.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="themes\default\Ga4AtomSiteSetup.aspx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="themes\default\Ga4AtomSiteAdminWidget.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <None Include="TODO" />
   </ItemGroup>

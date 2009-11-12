@@ -1,4 +1,12 @@
-﻿body
+﻿.GA4AtomSiteSetupLabel
 {
+	width: 200px;
+	display: block;
+	float: left;
+	clear: both;
 }
-/* Add layout to setup and success pages */
+
+.GA4AtomSiteSetupError
+{
+	color: Red;
+}
