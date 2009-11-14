@@ -1,21 +1,25 @@
-﻿// GA4AtomSite Setup Start
-function InitGA4AtomSiteSetup() {
-    $("#GA4AtomSiteSetupForm").submit(GA4AtomSiteSetupFormSubmitted);
-}
+﻿//Scoping the plugin's javascript to avoid namespace conflicts
+var GA4AtomSite = [];
+; (function($) {
+    // GA4AtomSite Setup Start
+    GA4AtomSite.InitGA4AtomSiteSetup = function() {
+        $("#GA4AtomSiteSetupForm").submit(_GA4AtomSiteSetupFormSubmitted);
+    };
 
-function GA4AtomSiteSetupMessage(Text, Error) {
-    $("#GA4AtomSiteSetupMessage").toggleClass('GA4AtomSiteSetupError', Error).text(Text);
-}
-
-function GA4AtomSiteSetupFormSubmitted() {
-    var $form = $("#GA4AtomSiteSetupForm");
-    var username = $("#GAID", $form).val();
-    if (!username || !username.length || username.length < 1) {
-        GA4AtomSiteSetupMessage("Google Analytics Account ID required..", true);
+    function _GA4AtomSiteSetupMessage(Text, Error) {
+        $("#GA4AtomSiteSetupMessage").toggleClass('GA4AtomSiteSetupError', Error).text(Text);
     }
-    GA4AtomSiteSetupMessage("Loading..", false);
-    $(":input", $form).attr('disabled', 'disabled');
-    $.ajax(
+
+    function _GA4AtomSiteSetupFormSubmitted() {
+        var $form = $("#GA4AtomSiteSetupForm");
+        var username = $("#GAID", $form).val();
+        if (!username || !username.length || username.length < 1) {
+            _GA4AtomSiteSetupMessage("Google Analytics Account ID required..", true);
+            return false;
+        }
+        _GA4AtomSiteSetupMessage("Loading..", false);
+        $(":input", $form).attr('disabled', 'disabled');
+        $.ajax(
     {
         url: $form.attr('action'),
         data:
@@ -24,26 +28,26 @@ function GA4AtomSiteSetupFormSubmitted() {
             },
         dataType: 'json',
         type: 'post',
-        success: GA4AtomSiteBackFromSetup,
-        error: GA4AtomSiteSetupFailed
+        success: _GA4AtomSiteBackFromSetup,
+        error: _GA4AtomSiteSetupFailed
     });
-    return false;
-}
-
-function GA4AtomSiteSetupFailed(data) {
-    $(":input", "#GA4AtomSiteSetupForm").attr('disabled', '');
-    GA4AtomSiteSetupMessage("Invalid Account ID..", true);
-}
-
-function GA4AtomSiteBackFromSetup(data) {
-    if (!data || !data.success) {
-        SetupFailed(data);
-        return;
+        return false;
     }
-    $(":input", "#GA4AtomSiteSetupForm").attr('disabled', '');
-    $("#GAID", "#GA4AtomSiteSetupForm").val(data.GAID);
-    GA4AtomSiteSetupMessage("Success..", false);
-}
 
-// GA4AtomSite Setup End
+    function _GA4AtomSiteSetupFailed(data) {
+        $(":input", "#GA4AtomSiteSetupForm").attr('disabled', '');
+        _GA4AtomSiteSetupMessage("Invalid Account ID..", true);
+    }
 
+    function _GA4AtomSiteBackFromSetup(data) {
+        if (!data || !data.success) {
+            _GA4AtomSiteSetupFailed(data);
+            return;
+        }
+        $(":input", "#GA4AtomSiteSetupForm").attr('disabled', '');
+        $("#GAID", "#GA4AtomSiteSetupForm").val(data.GAID);
+        _GA4AtomSiteSetupMessage("Success..", false);
+    }
+
+    // GA4AtomSite Setup End
+})(jQuery);

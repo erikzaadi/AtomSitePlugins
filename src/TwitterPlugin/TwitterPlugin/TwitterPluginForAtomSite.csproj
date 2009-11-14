@@ -34,22 +34,27 @@
     <Reference Include="AtomSite.Domain, Version=1.3.0.0, Culture=neutral, PublicKeyToken=c65e0a7d7f9eb5f5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Domain.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.Repository, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Repository.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.Utils, Version=1.1.0.0, Culture=neutral, PublicKeyToken=c786575482a77ba5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.WebCore, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.WebCore.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="StructureMap, Version=2.5.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\StructureMap.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

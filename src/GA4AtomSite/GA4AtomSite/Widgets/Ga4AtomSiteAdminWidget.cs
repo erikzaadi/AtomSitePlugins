@@ -15,7 +15,7 @@ namespace GA4AtomSite.Widgets
         {
             AddAsset("GA4AtomSite.css", "admin");
             AddAsset("GA4AtomSite.js", "admin");
-            TailScript = "InitGA4AtomSiteSetup();";
+            TailScript = "GA4AtomSite.InitGA4AtomSiteSetup();";
         }
 
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)

@@ -1,4 +1,4 @@
-﻿.GA4AtomSiteSetupLabel
+﻿.GA4AtomSiteSetupWidget .GA4AtomSiteSetupLabel
 {
 	width: 200px;
 	display: block;
@@ -6,7 +6,7 @@
 	clear: both;
 }
 
-.GA4AtomSiteSetupError
+.GA4AtomSiteSetupWidget .GA4AtomSiteSetupError
 {
 	color: Red;
 }

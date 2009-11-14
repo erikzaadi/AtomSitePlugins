@@ -13,7 +13,7 @@ namespace TwitterPluginForAtomSite.Widgets
         {
             AddAsset("TwitterPlugin.css", "admin");
             AddAsset("TwitterPlugin.js", "admin");
-            TailScript = "InitTwitterSetup();";
+            TailScript = "TwitterPlugin.InitTwitterSetup();";
         }
 
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)

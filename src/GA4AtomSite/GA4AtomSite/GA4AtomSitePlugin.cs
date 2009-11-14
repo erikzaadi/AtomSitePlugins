@@ -24,7 +24,6 @@ namespace GA4AtomSite
         {
             base.SetupIncludeInPageArea(container, "BlogListing", "sidemid", "Ga4AtomSiteWidget");
             base.SetupIncludeInPageArea(container, "BlogEntry", "content", "Ga4AtomSiteWidget");
-            base.SetupIncludeInPageArea(container, "BlogHome", "content", "Ga4AtomSiteWidget");
             base.SetupIncludeInPageArea(container, "AdminSettingsEntireSite", "settingsLeft", "Ga4AtomSiteAdminWidget");
 
             return base.Setup(container, appPath);
