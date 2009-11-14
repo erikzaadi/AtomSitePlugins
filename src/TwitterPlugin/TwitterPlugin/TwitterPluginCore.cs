@@ -62,11 +62,10 @@ namespace TwitterPluginForAtomSite
         public static TwitterStructs.Settings UpdateAndReturnCurrent(
             string id,
             int? limit,
-            TimeSpan? CacheDuration,
-            System.Web.Caching.Cache Cache)
+            TimeSpan? CacheDuration)
         {
-            TwitterCacheManager.Delete(TwitterStructs.TwitterConsts.TwitterCachePrefix, Cache);
-            if (TwitterInteraction.GetTwitterUser(null, new TimeSpan(), id) == null)
+            TwitterCacheManager.Delete(TwitterStructs.TwitterConsts.TwitterCachePrefix);
+            if (TwitterInteraction.GetTwitterUser(new TimeSpan(), id) == null)
                 return new TwitterStructs.Settings();
             var doc = new XDocument(new XElement(TwitterStructs.TwitterConsts.TwitterConfigRootElement,
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigUserElement, id),
@@ -79,13 +78,12 @@ namespace TwitterPluginForAtomSite
             return toReturn;
         }
 
-        public static TwitterStructs.Twitter GetUpdates(System.Web.Caching.Cache Cache)
+        public static TwitterStructs.Twitter GetUpdates()
         {
             var Settings = GetCurrent();
             if (Settings == null)
                 return null;
             return TwitterInteraction.GetUpdates(
-                Cache,
                 Settings.CacheDuration.HasValue ? Settings.CacheDuration.Value : TwitterStructs.TwitterConsts.TwitterDefaultCacheDuration,
                 Settings.UserName,
                 Settings.Limit.HasValue ? Settings.Limit.Value : TwitterStructs.TwitterConsts.TwitterDefaultLimit);

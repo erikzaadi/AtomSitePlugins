@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AtomSite.WebCore;
+using System.Web.Mvc;
 
 namespace GA4AtomSite.Widgets
 {
@@ -15,18 +16,12 @@ namespace GA4AtomSite.Widgets
 
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)
         {
-            string GoogleAnalyticsID = GA4AtomSiteUtils.CurrentGoogleAnalyticsID;
-            if (string.IsNullOrEmpty(GoogleAnalyticsID))
-            {
-                return;
-            }
-            else
-                ctx.HttpContext.Response.Write(GA.NET.Core.Engine.GetGoogleAnalytics(GoogleAnalyticsID,
-                    ctx.HttpContext.Request.Url.Host,
-                    ctx.HttpContext.Request.UrlReferrer != null ? ctx.HttpContext.Request.UrlReferrer.ToString() : "",
-                    ctx.HttpContext.Request.Url.PathAndQuery,
-                    ""));
-
+            HtmlHelper helper = new HtmlHelper(ctx, new ViewDataContainer() { ViewData = ctx.ViewData });
+            System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, new Models.GA4AtomSiteModel(GA4AtomSiteUtils.CurrentGoogleAnalyticsID));
+        }
+        class ViewDataContainer : IViewDataContainer
+        {
+            public ViewDataDictionary ViewData { get; set; }
         }
     }
 }

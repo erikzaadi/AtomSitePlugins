@@ -9,14 +9,12 @@ namespace TwitterPluginForAtomSite
     public class TwitterInteraction
     {
         public static TwitterStructs.Twitter GetUpdates(
-            System.Web.Caching.Cache Cache,
             TimeSpan CacheDuration,
             string TwitterName,
             int Limit)
         {
             var cached = TwitterCacheManager.Get<TwitterStructs.Twitter>(
                 TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName,
-                Cache,
                 CacheDuration);
             if (cached != null)
                 return cached;
@@ -85,8 +83,7 @@ namespace TwitterPluginForAtomSite
                          };
             toReturn.Tweets = tweets.ToList();
             TwitterCacheManager.Set(toReturn,
-                TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName, 
-                Cache);
+                TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName);
             return toReturn;
         }
 
@@ -95,11 +92,10 @@ namespace TwitterPluginForAtomSite
             return element.Element(name) != null && !string.IsNullOrEmpty(element.Element(name).Value) ? element.Element(name).Value : "";
         }
 
-        public static TwitterStructs.User GetTwitterUser(System.Web.Caching.Cache Cache, TimeSpan CacheDuration, string TwitterName)
+        public static TwitterStructs.User GetTwitterUser(TimeSpan CacheDuration, string TwitterName)
         {
             var cached = TwitterCacheManager.Get<TwitterStructs.User>(
                 TwitterStructs.TwitterConsts.TwitterUser + TwitterName,
-                Cache,
                 CacheDuration);
             if (cached != null)
                 return cached;
@@ -144,7 +140,7 @@ namespace TwitterPluginForAtomSite
                            StatusCount = ElementValueSingleOrDefault(u, "statuses_count")
                        };
             var toReturn = user.SingleOrDefault();
-            TwitterCacheManager.Set(toReturn, TwitterStructs.TwitterConsts.TwitterUser + TwitterName, Cache);
+            TwitterCacheManager.Set(toReturn, TwitterStructs.TwitterConsts.TwitterUser + TwitterName);
             return toReturn;
         }
 

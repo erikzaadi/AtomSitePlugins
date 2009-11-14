@@ -16,7 +16,7 @@ namespace TwitterPluginForAtomSite
             TimeSpan? cacheduration = null;
             if (cachedurationinminutes.HasValue)
                 cacheduration = new TimeSpan(0, cachedurationinminutes.Value, 0);
-            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cacheduration, HttpContext.Cache);
+            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cacheduration);
             if (Request.IsAjaxRequest())
                 return Json(current);
             else

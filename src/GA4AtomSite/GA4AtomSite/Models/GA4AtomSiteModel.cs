@@ -6,9 +6,9 @@ using AtomSite.WebCore;
 
 namespace GA4AtomSite.Models
 {
-    public class GA4AtomSiteAdminModel : BaseModel
+    public class GA4AtomSiteModel : BaseModel
     {
-        public GA4AtomSiteAdminModel(string GAID)
+        public GA4AtomSiteModel(string GAID)
         {
             this.GAID = GAID;
         }

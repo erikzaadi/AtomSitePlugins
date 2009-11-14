@@ -13,7 +13,7 @@
     <div class="TwitterStatuses TwitterRounded">
         <% foreach (var p in Model.TwitterResponse.Tweets)
            { %>
-        <div class="TwitterStatus TwitterRounded">
+        <div class="TwitterStatus">
             <div class="TwitterStatusText">
                 <%= p.Text %></div>
             <div class="TwitterStatusFooter">

@@ -19,7 +19,7 @@ namespace TwitterPluginForAtomSite.Widgets
         public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)
         {
             HtmlHelper helper = new HtmlHelper(ctx, new ViewDataContainer() { ViewData = ctx.ViewData });
-            var model = new Models.ClientModel { TwitterResponse = TwitterPluginCore.GetUpdates(ctx.HttpContext.Cache) };
+            var model = new Models.ClientModel { TwitterResponse = TwitterPluginCore.GetUpdates() };
             System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, model);
         }
         class ViewDataContainer : IViewDataContainer

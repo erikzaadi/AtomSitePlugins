@@ -7,7 +7,14 @@ namespace TwitterPluginForAtomSite
 {
     public class TwitterCacheManager
     {
-        public static ObjType Get<ObjType>(string Name, System.Web.Caching.Cache cache, TimeSpan CacheDuration) where ObjType : class
+        private static System.Web.Caching.Cache cache
+        {
+            get
+            {
+                return System.Web.HttpContext.Current != null ? System.Web.HttpContext.Current.Cache : null;
+            }
+        }
+        public static ObjType Get<ObjType>(string Name, TimeSpan CacheDuration) where ObjType : class
         {
             if (cache == null)
                 return null;
@@ -21,7 +28,7 @@ namespace TwitterPluginForAtomSite
                 return cached.Cached as ObjType;
         }
 
-        public static void Set<ObjType>(ObjType ToCache, string Name, System.Web.Caching.Cache cache) where ObjType : class
+        public static void Set<ObjType>(ObjType ToCache, string Name) where ObjType : class
         {
             if (cache == null)
                 return;
@@ -29,7 +36,7 @@ namespace TwitterPluginForAtomSite
             cache[Name] = cacheObj;
         }
 
-        public static void Delete(string StartingWith, System.Web.Caching.Cache cache)
+        public static void Delete(string StartingWith)
         {
             if (cache == null)
                 return;
