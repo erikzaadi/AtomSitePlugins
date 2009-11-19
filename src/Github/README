@@ -1,0 +1,10 @@
+Github Integration for Atomsite
+
+Gists
+"http://gist.github.com/"+ id +".json
+http://gist.github.com/4277
+http://develop.github.com/
+http://support.github.com/discussions/gist/65-update-gists-in-the-api
+
+Badge
+Something like : http://projects.erikzaadi.com/jQueryPlugins/jQuery.GitHubBadge/Sample/
