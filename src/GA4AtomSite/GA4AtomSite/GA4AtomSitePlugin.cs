@@ -15,18 +15,16 @@ namespace GA4AtomSite
 
         public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
         {
-            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "Ga4AtomSite", "Get");
-            //RegisterWidget<Widgets.Ga4AtomSiteWidget>(container);
-            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "Ga4AtomSite", "GetAdmin");
-            //RegisterWidget<Widgets.Ga4AtomSiteAdminWidget>(container);
-            RegisterController<GA4AtomSiteController>(container);
+            base.RegisterController<GA4AtomSiteController>(container);
+            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "GA4AtomSite", "Get");
+            RegisterCompositeWidget(container, "Ga4AtomSiteAdminWidget", "GA4AtomSite", "GetAdmin");
         }
 
         public override AtomSite.Domain.PluginState Setup(StructureMap.IContainer container, string appPath)
         {
             base.SetupIncludeInPageArea(container, "BlogListing", "sidemid", "Ga4AtomSiteWidget");
             base.SetupIncludeInPageArea(container, "BlogEntry", "content", "Ga4AtomSiteWidget");
-            base.SetupIncludeInPageArea(container, "AdminSettingsEntireSite", "settingsLeft", "Ga4AtomSiteAdminWidget");
+            base.SetupIncludeInPageArea(container, "AdminSettingsCollection", "settingsLeft", "Ga4AtomSiteAdminWidget");
 
             return base.Setup(container, appPath);
         }

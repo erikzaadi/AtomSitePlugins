@@ -6,8 +6,9 @@ using AtomSite.WebCore;
 
 namespace GA4AtomSite.Models
 {
-    public class GA4AtomSiteAdminModel : BaseModel
+    public class GA4AtomSiteAdminModel : AdminModel
     {
-        public System.Collections.Specialized.NameValueCollection GAIDS { get; set; }
+        public string GAID { get; set; }
+        public string CollectionID { get; set; }
     }
 }

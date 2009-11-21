@@ -4,18 +4,10 @@
         Google Analytics Widget Settings</h3>
     <% Html.BeginForm("Set", "GA4AtomSite", FormMethod.Post, new { id = "GA4AtomSiteSetupForm" });  %>
     <div>
-        <% foreach (string key in Model.GAIDS.Keys)
-           { %>
-        <div>
-            <span>
-                <%= key %></span>
-        </div>
-        <div>
-            <span class="GA4AtomSiteSetupLabel">Google Analytics Account ID:</span><%= Html.TextBox("GAID", Model.GAIDS[key])%>
-        </div>
+            <span class="GA4AtomSiteSetupLabel">Google Analytics Account ID:</span><%= Html.TextBox("GAID",Model.GAID)%>
     </div>
-    <%} %>
     <div>
+    <%= Html.Hidden("CollectionID", Model.CollectionID) %>
         <span class="GA4AtomSiteSetupLabel" id="GA4AtomSiteSetupMessage"></span>&nbsp;<input
             type="submit" value="Update" />
     </div>

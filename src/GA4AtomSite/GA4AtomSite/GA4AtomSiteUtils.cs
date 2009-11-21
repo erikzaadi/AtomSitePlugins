@@ -99,7 +99,7 @@ namespace GA4AtomSite
             var gaids = GetGAIDsFromXML();
             if (gaids == null || gaids.Count() == 0)
                 return toReturn;
-            else 
+            else
                 gaids.ToList().ForEach(p => toReturn.Add(p.Attribute("CollectionID").Value, p.Value));
             return toReturn;
         }
@@ -109,9 +109,15 @@ namespace GA4AtomSite
             System.Collections.Specialized.NameValueCollection toReturn = new System.Collections.Specialized.NameValueCollection();
             foreach (var collection in Collections)
             {
-                toReturn.Add(collection.Id.ToFullWebId(), GetGAIDFromXML(collection.Id.ToFullWebId()));
+                string id = collection.Id.Workspace + collection.Id.Collection;
+                toReturn.Add(collection.Id.Workspace + " - " + collection.Id.Collection, GetGAIDFromXML(id));
             }
             return toReturn;
+        }
+
+        internal static string GetGAIDForCollection(AtomSite.Domain.AppCollection Collection)
+        {
+            return GetGAIDFromXML(Collection.Id.Workspace + Collection.Id.Collection);
         }
     }
 }

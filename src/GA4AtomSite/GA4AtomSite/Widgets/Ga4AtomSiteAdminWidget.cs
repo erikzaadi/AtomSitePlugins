@@ -7,26 +7,15 @@ using System.Web.Mvc;
 
 namespace GA4AtomSite.Widgets
 {
-    public class Ga4AtomSiteAdminWidget : AtomSite.WebCore.BaseWidget
+    public class Ga4AtomSiteAdminWidget : AtomSite.WebCore.CompositeWidget
     {
-        ILogService LogService { get; set; }
         public Ga4AtomSiteAdminWidget()
-            : base("Ga4AtomSiteAdminWidget")
+            : base("Ga4AtomSiteAdminWidget", "Ga4AtomSite", "GetAdmin")
         {
             AddAsset("GA4AtomSite.css", "admin");
             AddAsset("GA4AtomSite.js", "admin");
             TailScript = "GA4AtomSite.InitGA4AtomSiteSetup();";
         }
-
-        public override void Render(System.Web.Mvc.ViewContext ctx, AtomSite.Domain.Include include)
-        {
-            HtmlHelper helper = new HtmlHelper(ctx, new ViewDataContainer() { ViewData = ctx.ViewData });
-            System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, new Models.GA4AtomSiteAdminModel { GAIDS = GA4AtomSiteUtils.GetGAIDsCollection() });
-        }
-
-        class ViewDataContainer : IViewDataContainer
-        {
-            public ViewDataDictionary ViewData { get; set; }
-        }
+       
     }
 }

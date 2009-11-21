@@ -23,12 +23,12 @@ namespace GA4AtomSite
         [ScopeAuthorize]
         public ActionResult GetAdmin()
         {
-            return PartialView("Ga4AtomSiteAdminWidget", new Models.GA4AtomSiteAdminModel { GAIDS = GA4AtomSiteUtils.GetGAIDsCollection(base.Workspace.Collections) });
+            return PartialView("Ga4AtomSiteAdminWidget", new Models.GA4AtomSiteAdminModel { GAID = GA4AtomSiteUtils.GetGAIDForCollection(Collection), CollectionID = Collection.Id.Workspace + Collection.Id.Collection });
         }
 
         public ActionResult Get()
         {
-            return PartialView("Ga4AtomSiteWidget", new GA4AtomSite.Models.GA4AtomSiteModel(GA4AtomSiteUtils.GetGAIDByCollectionID(base.Collection.Id.ToFullWebId())));
+            return PartialView("Ga4AtomSiteWidget", new GA4AtomSite.Models.GA4AtomSiteModel(GA4AtomSiteUtils.GetGAIDByCollectionID(base.Collection.Id.Workspace + base.Collection.Id.Collection)));
         }
     }
 }
