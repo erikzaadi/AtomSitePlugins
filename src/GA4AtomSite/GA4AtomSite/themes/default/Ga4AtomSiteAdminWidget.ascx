@@ -1,16 +1,23 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<GA4AtomSite.Models.GA4AtomSiteModel>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<GA4AtomSite.Models.GA4AtomSiteAdminModel>" %>
 <div class="GA4AtomSiteSetupWidget widget settings area">
     <h3>
         Google Analytics Widget Settings</h3>
     <% Html.BeginForm("Set", "GA4AtomSite", FormMethod.Post, new { id = "GA4AtomSiteSetupForm" });  %>
     <div>
+        <% foreach (string key in Model.GAIDS.Keys)
+           { %>
         <div>
-            <span class="GA4AtomSiteSetupLabel">Google Analytics Account ID:</span><%= Html.TextBox("GAID", Model.GAID)%>
+            <span>
+                <%= key %></span>
         </div>
         <div>
-            <span class="GA4AtomSiteSetupLabel" id="GA4AtomSiteSetupMessage"></span>&nbsp;<input type="submit"
-                value="Update" />
+            <span class="GA4AtomSiteSetupLabel">Google Analytics Account ID:</span><%= Html.TextBox("GAID", Model.GAIDS[key])%>
         </div>
+    </div>
+    <%} %>
+    <div>
+        <span class="GA4AtomSiteSetupLabel" id="GA4AtomSiteSetupMessage"></span>&nbsp;<input
+            type="submit" value="Update" />
     </div>
     <% Html.EndForm();  %>
 </div>

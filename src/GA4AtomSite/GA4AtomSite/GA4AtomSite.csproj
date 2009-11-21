@@ -80,13 +80,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GA4AtomSiteCacheManager.cs" />
+    <Compile Include="Models\GA4AtomSiteAdminModel.cs" />
     <Compile Include="Models\GA4AtomSiteModel.cs" />
     <Compile Include="GA4AtomSiteController.cs" />
     <Compile Include="GA4AtomSitePlugin.cs" />
     <Compile Include="GA4AtomSiteUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\Ga4AtomSiteAdminWidget.cs" />
-    <Compile Include="Widgets\Ga4AtomSiteWidget.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\default\GA4AtomSite.css">

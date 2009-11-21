@@ -23,49 +23,26 @@ namespace GA4AtomSite
         private const string GAConfigROOT = "GA4AtomSite";
         private const string GAConfigGAElement = "GAID";
         private const string GAConfigCacheName = "GA4AtomSite";
-        public static string CurrentGoogleAnalyticsID
-        {
-            get
-            {
-                return _getGAID();
-            }
-            set
-            {
-                _setGAID(value);
-            }
-        }
 
-        private static void _setGAID(string value)
-        {
-            if (Cache != null)
-                Cache.Remove(GAConfigCacheName);
-            
-            var doc = new XDocument(new XElement(GAConfigROOT,
-               new XElement(GAConfigGAElement, value)
-               ));
-
-            doc.Save(GetGAConfigPath());
-        }
-
-        private static string _getGAID()
-        {
-            var cached = GetGAIDFromCache();
-            if (string.IsNullOrEmpty(cached))
-                cached = GetGAIDFromXML();
-            return cached;
-        }
-
-        private static string GetGAIDFromXML()
+        private static IEnumerable<XElement> GetGAIDsFromXML()
         {
             var xml = GetGAConfigXMLDoc();
             if (xml == null ||
                 xml.Root.Name == null ||
                 xml.Root.Name != GAConfigROOT ||
-                xml.Descendants(GAConfigGAElement).SingleOrDefault() == null ||
-                string.IsNullOrEmpty(xml.Descendants(GAConfigGAElement).SingleOrDefault().Value))
+                xml.Descendants(GAConfigGAElement).Count() == 0)
                 return null;
             else
-                return xml.Descendants(GAConfigGAElement).SingleOrDefault().Value;
+                return xml.Descendants(GAConfigGAElement);
+        }
+
+        private static string GetGAIDFromXML(string CollectionID)
+        {
+            var GAIDS = GetGAIDsFromXML();
+            if (GAIDS == null)
+                return null;
+            else
+                return GAIDS.Where(p => p.Attribute("CollectionID").Value == CollectionID).Select(p => p.Value).SingleOrDefault();
         }
 
         private static string GetGAIDFromCache()
@@ -88,6 +65,53 @@ namespace GA4AtomSite
         private static string GetGAConfigPath()
         {
             return System.IO.Path.Combine(System.Web.HttpRuntime.AppDomainAppPath, GAConfigFileName);
+        }
+
+        internal static string GetGAIDByCollectionID(string CollectionID)
+        {
+            return GetGAIDFromXML(CollectionID);
+        }
+
+        internal static void SetGAIDForCollectionID(string GAID, string CollectionID)
+        {
+            var xml = GetGAConfigXMLDoc();
+            if (xml == null ||
+                xml.Root.Name == null ||
+                xml.Root.Name != GAConfigROOT)
+                return;
+
+            var gaids = xml.Descendants(GAConfigGAElement);
+            if (gaids == null || gaids.Where(p => p.Attribute("CollectionID").Value == CollectionID).Count() == 0)
+            {
+                var toAdd = new XElement(GAConfigGAElement, GAID);
+                toAdd.SetAttributeValue("CollectionID", CollectionID);
+                xml.Add(toAdd);
+            }
+            else
+            {
+                gaids.Where(p => p.Attribute("CollectionID").Value == CollectionID).Single().Value = GAID;
+            }
+        }
+
+        internal static System.Collections.Specialized.NameValueCollection GetGAIDsCollection()
+        {
+            System.Collections.Specialized.NameValueCollection toReturn = new System.Collections.Specialized.NameValueCollection();
+            var gaids = GetGAIDsFromXML();
+            if (gaids == null || gaids.Count() == 0)
+                return toReturn;
+            else 
+                gaids.ToList().ForEach(p => toReturn.Add(p.Attribute("CollectionID").Value, p.Value));
+            return toReturn;
+        }
+
+        internal static System.Collections.Specialized.NameValueCollection GetGAIDsCollection(IEnumerable<AtomSite.Domain.AppCollection> Collections)
+        {
+            System.Collections.Specialized.NameValueCollection toReturn = new System.Collections.Specialized.NameValueCollection();
+            foreach (var collection in Collections)
+            {
+                toReturn.Add(collection.Id.ToFullWebId(), GetGAIDFromXML(collection.Id.ToFullWebId()));
+            }
+            return toReturn;
         }
     }
 }

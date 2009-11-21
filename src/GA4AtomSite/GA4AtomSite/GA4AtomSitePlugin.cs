@@ -15,8 +15,10 @@ namespace GA4AtomSite
 
         public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
         {
-            RegisterWidget<Widgets.Ga4AtomSiteWidget>(container);
-            RegisterWidget<Widgets.Ga4AtomSiteAdminWidget>(container);
+            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "Ga4AtomSite", "Get");
+            //RegisterWidget<Widgets.Ga4AtomSiteWidget>(container);
+            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "Ga4AtomSite", "GetAdmin");
+            //RegisterWidget<Widgets.Ga4AtomSiteAdminWidget>(container);
             RegisterController<GA4AtomSiteController>(container);
         }
 

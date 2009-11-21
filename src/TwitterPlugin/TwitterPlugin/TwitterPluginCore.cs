@@ -101,6 +101,8 @@ namespace TwitterPluginForAtomSite
                 Settings.UserName,
                 Settings.Limit.HasValue ? Settings.Limit.Value : TwitterStructs.TwitterConsts.TwitterDefaultLimit,
                 PagingIndex);
+            if (toReturn == null)
+                return toReturn;
             toReturn.Settings = Settings;
             toReturn.PagingIndex = ++PagingIndex;
             return toReturn;
