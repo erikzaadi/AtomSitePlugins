@@ -14,7 +14,7 @@ namespace TwitterPluginForAtomSite
                 return System.Web.HttpContext.Current != null ? System.Web.HttpContext.Current.Cache : null;
             }
         }
-        public static ObjType Get<ObjType>(string Name, TimeSpan CacheDuration) where ObjType : class
+        public static ObjType Get<ObjType>(string Name, int CacheDuration) where ObjType : class
         {
             if (cache == null)
                 return null;
@@ -22,7 +22,7 @@ namespace TwitterPluginForAtomSite
             if (cached == null)
                 return null;
             var now = DateTime.Now;
-            if (now.Subtract(cached.When) > CacheDuration)
+            if (now.Subtract(cached.When).Minutes > CacheDuration)
                 return null;
             else
                 return cached.Cached as ObjType;

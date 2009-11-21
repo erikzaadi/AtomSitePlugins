@@ -11,16 +11,22 @@ namespace TwitterPluginForAtomSite
     {
         [ScopeAuthorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Setup(string id, int? limit, int? cachedurationinminutes)
+        public ActionResult Setup(string id, int? limit, int? cachedurationinminutes, int? clientrefreshinminutes)
         {
-            TimeSpan? cacheduration = null;
-            if (cachedurationinminutes.HasValue)
-                cacheduration = new TimeSpan(0, cachedurationinminutes.Value, 0);
-            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cacheduration);
+            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cachedurationinminutes, clientrefreshinminutes);
             if (Request.IsAjaxRequest())
                 return Json(current);
             else
                 return RedirectToRoute(new { controller = "Admin" });
+        }
+
+        public ActionResult Get(int? PagingIndex)
+        {
+            var response = TwitterPluginCore.GetUpdates(PagingIndex);
+            if (Request.IsAjaxRequest())
+                return PartialView("TwitterPartialWidget", response.Tweets);
+            else
+                return PartialView("TwitterWidget", new Models.ClientModel { TwitterResponse = response });
         }
     }
 }

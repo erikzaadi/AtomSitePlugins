@@ -18,17 +18,12 @@ var TwitterPlugin = [];
             _TwitterSetupMessage("User name is required..", true);
             return false;
         }
-        var wantedLimit = $("#limit", $form).val()
         _TwitterSetupMessage("Loading..", false);
         $(":input", $form).attr('disabled', 'disabled');
         $.ajax(
     {
         url: $form.attr('action'),
-        data:
-            {
-                id: username,
-                limit: wantedLimit
-            },
+        data: $.param($(":input", $form)),
         dataType: 'json',
         type: 'post',
         success: _BackFromSetup,
@@ -43,10 +38,8 @@ var TwitterPlugin = [];
     }
 
     function _BackFromSetup(data) {
-        if (!data || !data.UserName) {
-            SetupFailed(data);
-            return;
-        }
+        if (!data || !data.UserName)
+            return _SetupFailed(data);
         $(":input", "#TwitterSetupForm").attr('disabled', '');
         $("#id", "#TwitterSetupForm").val(data.UserName);
         $("#limit", "#TwitterSetupForm").val(data.Limit);
@@ -59,8 +52,54 @@ var TwitterPlugin = [];
 
 
     TwitterPlugin.InitTwitterClient = function() {
-        //TODO : Add "More" button which fetches more tweets..
+        var refreshInMinutes = $("#TwitterClientForm #ClientRefreshDuration").val();
+        if (refreshInMinutes && !isNaN(refreshInMinutes)) {
+            _Interval = setInterval(function() { _RefreshTwitterClient(); }, 1000 * 60 * refreshInMinutes);
+        }
+        $("#TwitterClientForm").submit(_TwitterClientSubmitted);
+        $(".TwitterMoreButton").focus(function() { $(this).blur(); });
     };
 
+    var _Interval;
+
+    function _TwitterClientSubmitted() {
+        clearInterval(_Interval);
+        if ($(".TwitterMoreButton").hasClass('TwitterMoreButtonLoading'))
+            return false;
+        $(".TwitterMoreButton").addClass('TwitterMoreButtonLoading');
+        var $form = $(this);
+        $.ajax(
+        {
+            url: $form.attr('action'),
+            data: $.param($(":input", $form)),
+            dataType: 'html',
+            type: 'get',
+            success: _ClientRefreshed,
+            error: _SetupFailed
+        });
+        return false;
+    }
+
+    function _ClientFailed(data) {
+        $(".TwitterMoreButton").removeClass('TwitterMoreButtonLoading');
+    }
+    function _RefreshTwitterClient() {
+        $(".TwitterMoreButton").addClass('TwitterMoreButtonLoading');
+        $("#PagingIndex").val(0);
+        $.get($("#TwitterClientForm").attr('action'), {}, _ClientRefreshed);
+    }
+    function _ClientRefreshed(data) {
+        if (!data)
+            return _ClientFailed();
+        var temp = $("#PagingIndex").val();
+        var paging = temp ? parseInt(temp) : 2;
+        $("#PagingIndex").val(isNaN(paging) ? 2 : ++paging);
+        var $toAppend = $('<div style="display:none" />');
+        $toAppend.fadeOut()
+            .append(data);
+        $(".TwitterWidget .TwitterStatuses")[paging < 2 ? 'html' : 'append']($toAppend);
+        $toAppend.slideToggle();
+        $(".TwitterMoreButton").removeClass('TwitterMoreButtonLoading');
+    }
     // Twitter Client End
 })(jQuery);

@@ -14,9 +14,15 @@
                 Tweets</div>
         </div>
         <div>
-            <span class="TwitterSetupLabel">Cache Duration (Minutes):</span><%= Html.TextBox("cachedurationinminutes", Model.TwitterSettings != null && Model.TwitterSettings.CacheDuration.HasValue ? Model.TwitterSettings.CacheDuration.Value.Minutes.ToString() : "")%>
+            <span class="TwitterSetupLabel">Cache Duration (Minutes):</span><%= Html.TextBox("cachedurationinminutes", Model.TwitterSettings != null && Model.TwitterSettings.CacheDuration.HasValue ? Model.TwitterSettings.CacheDuration.Value.ToString() : "")%>
             <div class="TwitterOptional">Optional , Defaults to
-                <%= TwitterPluginForAtomSite.TwitterStructs.TwitterConsts.TwitterDefaultCacheDuration.Minutes %>
+                <%= TwitterPluginForAtomSite.TwitterStructs.TwitterConsts.TwitterDefaultCacheDuration %>
+                minutes </div>
+        </div>
+        <div>
+            <span class="TwitterSetupLabel">Client Refresh (Minutes):</span><%= Html.TextBox("clientrefreshinminutes", Model.TwitterSettings != null && Model.TwitterSettings.ClientRefreshDuration.HasValue ? Model.TwitterSettings.ClientRefreshDuration.Value.ToString() : "")%>
+            <div class="TwitterOptional">Optional , Defaults to
+                <%= TwitterPluginForAtomSite.TwitterStructs.TwitterConsts.TwitterDefaultClientRefreshDuration %>
                 minutes </div>
         </div>
         <div>

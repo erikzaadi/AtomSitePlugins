@@ -18,29 +18,31 @@ namespace TwitterPluginForAtomSite
                 string.IsNullOrEmpty(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigUserElement).SingleOrDefault().Value))
                 return null;
 
-            int? limit = null;
-            int temp = -1;
-            if (xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault() != null &&
-                !string.IsNullOrEmpty(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault().Value) &&
-                int.TryParse(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault().Value, out temp) &&
-                temp > 0)
-                limit = temp;
+            int? limit = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault());
+            int? cacheduration = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigCacheDurationElement).SingleOrDefault());
+            int? clientrefresh = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigClientRefreshElement).SingleOrDefault());
 
-            TimeSpan? cacheduration = null;
-            TimeSpan tempTimespan = new TimeSpan(-15);
-            if (xml.Descendants(TwitterStructs.TwitterConsts.TwitterCacheDurationElement).SingleOrDefault() != null &&
-            !string.IsNullOrEmpty(xml.Descendants(TwitterStructs.TwitterConsts.TwitterCacheDurationElement).SingleOrDefault().Value) &&
-            TimeSpan.TryParse(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault().Value, out tempTimespan) &&
-            tempTimespan.Ticks != -15)
-                cacheduration = tempTimespan;
 
             var toReturn = new TwitterStructs.Settings
             {
                 UserName = xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigUserElement).SingleOrDefault().Value,
                 Limit = limit,
-                CacheDuration = cacheduration
+                CacheDuration = cacheduration,
+                ClientRefreshDuration = clientrefresh
             };
 
+            return toReturn;
+        }
+
+        private static int? GetIntFromElement(XElement element)
+        {
+            int? toReturn = null;
+            int temp = -1;
+            if (element != null &&
+                !string.IsNullOrEmpty(element.Value) &&
+                int.TryParse(element.Value, out temp) &&
+                temp > 0)
+                toReturn = temp;
             return toReturn;
         }
 
@@ -62,15 +64,17 @@ namespace TwitterPluginForAtomSite
         public static TwitterStructs.Settings UpdateAndReturnCurrent(
             string id,
             int? limit,
-            TimeSpan? CacheDuration)
+            int? CacheDuration,
+            int? ClientRefreshDuration)
         {
             TwitterCacheManager.Delete(TwitterStructs.TwitterConsts.TwitterCachePrefix);
-            if (TwitterInteraction.GetTwitterUser(new TimeSpan(), id) == null)
+            if (TwitterInteraction.GetTwitterUser(0, id) == null)
                 return new TwitterStructs.Settings();
             var doc = new XDocument(new XElement(TwitterStructs.TwitterConsts.TwitterConfigRootElement,
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigUserElement, id),
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigLimitElement, limit),
-                new XElement(TwitterStructs.TwitterConsts.TwitterCacheDurationElement, CacheDuration)
+                new XElement(TwitterStructs.TwitterConsts.TwitterConfigCacheDurationElement, CacheDuration),
+                new XElement(TwitterStructs.TwitterConsts.TwitterConfigClientRefreshElement, ClientRefreshDuration)
                 ));
             doc.Save(GetTwitterConfigPath());
             var toReturn = new TwitterStructs.Settings { Limit = limit, UserName = id };
@@ -80,13 +84,26 @@ namespace TwitterPluginForAtomSite
 
         public static TwitterStructs.Twitter GetUpdates()
         {
+            return GetUpdates(1);
+        }
+
+        public static TwitterStructs.Twitter GetUpdates(int? PagingIndex)
+        {
+            return PagingIndex.HasValue ? GetUpdates(PagingIndex.Value) : GetUpdates();
+        }
+        public static TwitterStructs.Twitter GetUpdates(int PagingIndex)
+        {
             var Settings = GetCurrent();
             if (Settings == null)
                 return null;
-            return TwitterInteraction.GetUpdates(
+            var toReturn = TwitterInteraction.GetUpdates(
                 Settings.CacheDuration.HasValue ? Settings.CacheDuration.Value : TwitterStructs.TwitterConsts.TwitterDefaultCacheDuration,
                 Settings.UserName,
-                Settings.Limit.HasValue ? Settings.Limit.Value : TwitterStructs.TwitterConsts.TwitterDefaultLimit);
+                Settings.Limit.HasValue ? Settings.Limit.Value : TwitterStructs.TwitterConsts.TwitterDefaultLimit,
+                PagingIndex);
+            toReturn.Settings = Settings;
+            toReturn.PagingIndex = ++PagingIndex;
+            return toReturn;
         }
     }
 }

@@ -6,31 +6,20 @@
     <h3>
         Twitter</h3>
     <div class="TwitterTitle TwitterRounded">
-            <a href="<%= Model.TwitterResponse.User.ProfileURL %>" title="<%= Model.TwitterResponse.User.Description %>">
-                <img src="<%= Model.TwitterResponse.User.ImageURL %>" alt="Twitter Image" /></a><span
-                    class="TwitterTitleName"><%= Model.TwitterResponse.User.Name%></span>
+        <a href="<%= Model.TwitterResponse.User.ProfileURL %>" title="<%= Model.TwitterResponse.User.Description %>">
+            <img src="<%= Model.TwitterResponse.User.ImageURL %>" alt="Twitter Image" /></a><span
+                class="TwitterTitleName"><%= Model.TwitterResponse.User.Name%></span>
     </div>
     <div class="TwitterStatuses TwitterRounded">
-        <% foreach (var p in Model.TwitterResponse.Tweets)
-           { %>
-        <div class="TwitterStatus">
-            <div class="TwitterStatusText">
-                <%= p.Text %></div>
-            <div class="TwitterStatusFooter">
-                <span class="TwitterStatusTime">
-                    <%= Html.DateTimeAgoAbbreviation(p.CreatedAt) %>
-                </span>from <span class="TwitterStatusSource">
-                    <%= p.Source %>
-                </span>
-                <% if (!string.IsNullOrEmpty(p.InReplyToScreenName))
-                   { %>
-                <span class="TwitterInResponseTo"><a href="<%= p.InReplyToStatusURL %>">in reply to
-                    <%= p.InReplyToScreenName%></a>.. </span>
-                <% } %>
-            </div>
-        </div>
-        <% } %>
+        <% Html.RenderPartial("TwitterPartialWidget", Model.TwitterResponse.Tweets); %>
     </div>
+    <% Html.BeginForm("Get", "Twitter", FormMethod.Get, new { id = "TwitterClientForm" }); %>
+    <%= Html.Hidden("PagingIndex", Model.TwitterResponse.PagingIndex) %>
+    <%= Html.Hidden("ClientRefreshDuration", Model.TwitterResponse.Settings.ClientRefreshDuration)%>
+    <button type="submit" class="TwitterMoreButton TwitterRounded">
+        <span class="TwitterMoreButtonText">More</span><span class="TwitterMoreButtonImage"><img
+            src="<%= Url.ImageSrc("twitterloader.gif") %>" alt="Loading" /></span></button>
+    <% Html.EndForm(); %>
     <div class="TwitterBottomInfo TwitterRounded">
         <div class="TwitterBottomInfoItem">
             <a href="<%= Model.TwitterResponse.User.TwitterHomeURL %>"><span class="TwitterBottomNumber">

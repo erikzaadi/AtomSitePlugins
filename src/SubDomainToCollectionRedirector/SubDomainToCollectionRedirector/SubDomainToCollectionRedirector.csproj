@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{204F01BF-FD26-49FC-B05A-25563DCF9C0A}</ProjectGuid>
+    <ProjectGuid>{2AC0F19C-ACF4-4D7D-8B12-A361A41DA8F8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TwitterPluginForAtomSite</RootNamespace>
-    <AssemblyName>TwitterPluginForAtomSite</AssemblyName>
+    <RootNamespace>SubDomainToCollectionRedirector</RootNamespace>
+    <AssemblyName>SubDomainToCollectionRedirector</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,33 +34,27 @@
     <Reference Include="AtomSite.Domain, Version=1.3.0.0, Culture=neutral, PublicKeyToken=c65e0a7d7f9eb5f5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Domain.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.Repository, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Repository.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.Utils, Version=1.1.0.0, Culture=neutral, PublicKeyToken=c786575482a77ba5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.Utils.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="AtomSite.WebCore, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\AtomSite.WebCore.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="StructureMap, Version=2.5.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\AtomSite\StructureMap.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\libs\MVC\System.Web.Abstractions.dll</HintPath>
@@ -85,49 +79,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TwitterCacheManager.cs" />
-    <Compile Include="Widgets\TwitterWidget.cs" />
-    <Compile Include="TwitterInteraction.cs" />
-    <Compile Include="Models\SetupModel.cs" />
-    <Compile Include="TwitterPluginCore.cs" />
-    <Compile Include="TwitterController.cs" />
-    <Compile Include="Models\ClientModel.cs" />
-    <Compile Include="TwitterPlugin.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Widgets\TwitterSetupWidget.cs" />
-    <Compile Include="TwitterStructs.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TODO" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="css\default\TwitterPlugin.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="img\default\twitterloader.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="img\default\twittermore.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="js\default\TwitterPlugin.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="themes\default\TwitterPartialWidget.ascx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="themes\default\TwitterSetupWidget.ascx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="themes\default\TwitterWidget.ascx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="TwitterPluginForAtomSite.1.3.0.0.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

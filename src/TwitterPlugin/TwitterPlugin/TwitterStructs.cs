@@ -13,12 +13,14 @@ namespace TwitterPluginForAtomSite
             public const string TwitterConfigRootElement = "TwitterSettings";
             public const string TwitterConfigUserElement = "Username";
             public const string TwitterConfigLimitElement = "Limit";
-            public const string TwitterCacheDurationElement = "CacheDuration";
+            public const string TwitterConfigClientRefreshElement = "ClientRefresh";
+            public const string TwitterConfigCacheDurationElement = "CacheDuration";
             public const string TwitterCurrentSettings = "TwitterCurrentSettings";
             public const string TwitterCachePrefix = "TwitterPluginCache-";
             public static string TwitterUser { get { return TwitterCachePrefix + "TwitterUser-"; } }
             public static string TwitterCurrentTweets { get { return TwitterCachePrefix + "TwitterCurrentTweets-"; } }
-            public static TimeSpan TwitterDefaultCacheDuration { get { return new TimeSpan(0, 10, 0); } }
+            public const int TwitterDefaultClientRefreshDuration = 5;
+            public const int TwitterDefaultCacheDuration = 10;
             public const int TwitterDefaultLimit = 5;
         }
         public class Tweet
@@ -48,14 +50,17 @@ namespace TwitterPluginForAtomSite
         public class Twitter
         {
             public User User { get; set; }
-            public List<Tweet> Tweets { get; set; }
+            public IList<Tweet> Tweets { get; set; }
+            public int PagingIndex { get; set; }
+            public Settings Settings { get; set; }
         }
 
         public class Settings
         {
             public string UserName { get; set; }
             public int? Limit { get; set; }
-            public TimeSpan? CacheDuration { get; set; }
+            public int? CacheDuration { get; set; }
+            public int? ClientRefreshDuration { get; set; }
         }
 
         public class TwitterCacheObject
