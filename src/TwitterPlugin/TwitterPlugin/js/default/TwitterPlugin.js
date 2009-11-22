@@ -85,19 +85,26 @@ var TwitterPlugin = [];
     }
     function _RefreshTwitterClient() {
         $(".TwitterMoreButton").addClass('TwitterMoreButtonLoading');
-        $("#PagingIndex").val(0);
+        $("#PagingIndex").val('refreshing');
         $.get($("#TwitterClientForm").attr('action'), {}, _ClientRefreshed);
     }
     function _ClientRefreshed(data) {
         if (!data)
             return _ClientFailed();
-        var temp = $("#PagingIndex").val();
-        var paging = temp ? parseInt(temp) : 2;
-        $("#PagingIndex").val(isNaN(paging) ? 2 : ++paging);
+        var paging = $("#PagingIndex").val();
+        if (paging !== 'refreshing') {
+            paging = parseInt(paging);
+            if (isNaN(paging))
+                paging = 1;
+        }
+        else {
+            paging = 0;
+        }
+        $("#PagingIndex").val(paging + 1);
         var $toAppend = $('<div style="display:none" />');
         $toAppend.fadeOut()
             .append(data);
-        $(".TwitterWidget .TwitterStatuses")[paging < 2 ? 'html' : 'append']($toAppend);
+        $(".TwitterWidget .TwitterStatuses")[paging < 1 ? 'html' : 'append']($toAppend);
         $toAppend.slideToggle();
         $(".TwitterMoreButton").removeClass('TwitterMoreButtonLoading');
     }
