@@ -141,26 +141,37 @@ namespace TwitterPluginForAtomSite
         {
             string tagRegex = @"(\#)\w+[\w]";
             string mentionRegex = @"(\@)\w+[\w]";
-            string linkRegex = @"((https|http):\/\/+[\w\d\.\-_\?\&\%\/\=\#]*)";
+            string linkRegex = @"((https|http):\/\/+[\w\d\.\-_\?\&\%\/\=\#\:]*)";
 
-            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(linkRegex);
-            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+            DoForAllMatches(Tweet, linkRegex, p =>
             {
-                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusLink\"><a href=\"{0}\">{0}</a></span>", caught.Value));
-            }
-            reg = new System.Text.RegularExpressions.Regex(tagRegex);
-            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+                Tweet = Tweet.Replace(p, string.Format("<span class=\"TwitterStatusLink\"><a href=\"{0}\">{0}</a></span>", p));
+            });
+            DoForAllMatches(Tweet, tagRegex, p =>
             {
-                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusTag\"><a href=\"http://twitter.com/search?q=%23{0}\">{1}</a></span>", caught.Value.Substring(1, caught.Length - 1), caught.Value));
-            }
-            reg = new System.Text.RegularExpressions.Regex(mentionRegex);
-            foreach (System.Text.RegularExpressions.Capture caught in reg.Match(Tweet).Captures)
+                Tweet = Tweet.Replace(p, string.Format("<span class=\"TwitterStatusTag\"><a href=\"http://twitter.com/search?q=%23{0}\">{1}</a></span>", p.Substring(1, p.Length - 1), p));
+            });
+            DoForAllMatches(Tweet, mentionRegex, p =>
             {
-                Tweet = Tweet.Replace(caught.Value, string.Format("<span class=\"TwitterStatusMention\">@<a href=\"http://twitter.com/{0}\">{0}</a></span>", caught.Value.Substring(1, caught.Length - 1)));
-            }
+                Tweet = Tweet.Replace(p, string.Format("<span class=\"TwitterStatusMention\">@<a href=\"http://twitter.com/{0}\">{0}</a></span>", p.Substring(1, p.Length - 1)));
+            });
 
             return Tweet;
         }
 
+        private static void DoForAllMatches(string Input, string Regex, Action<string> ToDo)
+        {
+            System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(Regex);
+            //There has got to be a better way to do this..
+            foreach (System.Text.RegularExpressions.Match caught in reg.Matches(Input))
+            {
+                foreach (System.Text.RegularExpressions.Capture capture in caught.Captures)
+                {
+                    ToDo(capture.Value);
+                }
+            }
+        }
     }
+
+
 }
