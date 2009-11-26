@@ -8,3 +8,6 @@ http://support.github.com/discussions/gist/65-update-gists-in-the-api
 
 Badge
 Something like : http://projects.erikzaadi.com/jQueryPlugins/jQuery.GitHubBadge/Sample/
+
+
+<script src="http://gist.github.com/104344.js"></script>

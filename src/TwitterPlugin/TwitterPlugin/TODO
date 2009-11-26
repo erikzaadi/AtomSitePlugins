@@ -14,4 +14,19 @@ post + page at blog for homepage
 
 Proper setup for zip distribution -> Bug with content-type being null..
 
-Shorten URLs for Publish widget : http://www.piurl.com/api.php?url=http://testshortwith.piurl/letsSetThen
+Shorten URLs for Publish widget : 
+http://www.piurl.com/api.php?url=http://testshortwith.piurl/letsSetThen
+http://u.mavrev.com/api.php?url=http://example.com/very/long/?url
+http://1url.com/?api=1url&u=http://long-url.example.com
+http://cli.gs/api/v1/cligs/create?url=http://test.com/somepost&title=TestTitle
+
+Twitter Status update:
+http://apiwiki.twitter.com/Twitter-REST-API-Method:-statuses%C2%A0update
+
+POST to http://twitter.com/statuses/update.format
+where format = json/xml
+
+
+<form action="http://user:password@twitter.com/statuses/update.xml" METHOD="POST">
+<textarea id="status" name="status"></textarea><button type="Submit">Tweet!</button>
+</form>
