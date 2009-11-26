@@ -85,7 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\PublishModel.cs" />
     <Compile Include="TwitterCacheManager.cs" />
+    <Compile Include="Widgets\TwitterPublishWidget.cs" />
     <Compile Include="Widgets\TwitterWidget.cs" />
     <Compile Include="TwitterInteraction.cs" />
     <Compile Include="Models\SetupModel.cs" />
@@ -112,6 +114,10 @@
     </Content>
     <Content Include="js\default\TwitterPlugin.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="themes\default\TwitterPublishWidget.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="themes\default\TwitterPartialWidget.ascx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

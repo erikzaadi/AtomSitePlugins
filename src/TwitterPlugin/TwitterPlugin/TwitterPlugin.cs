@@ -17,6 +17,7 @@ namespace TwitterPluginForAtomSite
         {
             RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterWidget>(container);
             RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterSetupWidget>(container);
+            RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterPublishWidget>(container);
             RegisterController<TwitterController>(container);
         }
 
@@ -25,6 +26,7 @@ namespace TwitterPluginForAtomSite
             LogService.Info("Setting up Twitter Plugin");
 
             base.SetupIncludeInPageArea(container, "BlogHome", "sidemid", "TwitterWidget");
+            base.SetupIncludeInPageArea(container, "AdminEditEntry", "editEntryContent", "TwitterPublishWidget");
             base.SetupIncludeInPageArea(container, "AdminSettingsEntireSite", "settingsLeft", "TwitterSetupWidget");
 
             LogService.Info("Finished Setting up Twitter Plugin");

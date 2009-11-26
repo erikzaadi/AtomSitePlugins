@@ -28,5 +28,15 @@ namespace TwitterPluginForAtomSite
             else
                 return PartialView("TwitterWidget", new Models.ClientModel { TwitterResponse = response });
         }
+
+        [ScopeAuthorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Publish(string id)
+        {
+            if (Request.IsAjaxRequest())
+                return Json(new { something = "aaa" });
+            else
+                return RedirectToRoute(new { controller = "Admin" });
+        }
     }
 }

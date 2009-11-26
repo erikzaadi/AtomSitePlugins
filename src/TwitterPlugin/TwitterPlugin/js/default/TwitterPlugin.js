@@ -109,4 +109,6 @@ var TwitterPlugin = [];
         $(".TwitterMoreButton").removeClass('TwitterMoreButtonLoading');
     }
     // Twitter Client End
+    TwitterPlugin.InitTwitterPublishSetup = function() {
+    };
 })(jQuery);
