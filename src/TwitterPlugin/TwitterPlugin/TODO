@@ -13,3 +13,5 @@ Zip as build step?
 post + page at blog for homepage
 
 Proper setup for zip distribution -> Bug with content-type being null..
+
+Shorten URLs for Publish widget : http://www.piurl.com/api.php?url=http://testshortwith.piurl/letsSetThen
