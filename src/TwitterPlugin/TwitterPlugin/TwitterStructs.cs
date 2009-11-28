@@ -46,7 +46,14 @@ namespace TwitterPluginForAtomSite
             public string StatusCount { get; set; }
             public string Description { get; set; }
             public string ProfileURL { get { return string.Format("http://twitter.com/account/profile_image/{0}", ScreenName); } }
-       }
+            public DateTime HasBeenTweetingSince { get; set; }
+            public string ProfileBackgroundColor { get; set; }
+            public string ProfileTextColor { get; set; }
+            public string ProfileLinkColor { get; set; }
+            public string ProfileSideBarFillColor { get; set; }
+            public string ProfileSideBarBorderColor { get; set; }
+            public string ProfileBackgroundImageURL { get; set; }
+        }
         public class Twitter
         {
             public User User { get; set; }

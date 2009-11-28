@@ -27,6 +27,12 @@
 {
 }
 
+.TwitterWhiteContainer
+{
+    padding : 5px;
+    background-color: #FFFFFF;
+}
+
 
 .TwitterTitle
 {
@@ -35,26 +41,27 @@
     padding: 10px;
     clear: both;
     margin: 5px;
-    font-size: 2.8em;
-    line-height: 50px;
     padding: 10px 15px 10px 0;
 }
 
 .TwitterTitle img
 {
     display: inline;
-    margin: 5px;
+    margin: 0px 0px 0px 5px;
+    vertical-align:text-bottom;
 }
 .TwitterTitle a, .TwitterTitle a:visited, .TwitterTitle a:hover
 {
+    text-decoration: none;
     border: none;
-    display: inline;
-    float: left;
 }
 
-.TwitterTitleName
+.TwitterTitleName, .TwitterTitleName:hover, .TwitterTitleName:visited
 {
-    clear: both;
+    vertical-align:text-bottom;
+    font-size: 2.8em;
+    border: none;
+    text-decoration: none;
     color: #000000;
     font-family: 'Helvetica' ,sans-serif;
     font-size-adjust: none;
@@ -63,8 +70,15 @@
     font-weight: bold;
 }
 
+.TwitterTitleNameSince
+{
+    margin: 0px 0px 0px 15px;
+    font-size: 8pt;
+}
+
 .TwitterStatuses
 {
+    background-color: #FFFFFF;
 }
 
 .TwitterStatus
@@ -149,6 +163,10 @@
     color: #663B12;
     display: block;
 }
+.TwitterMainContainer
+{
+    padding: 5px;
+}
 
 .TwitterBottomInfoItem a, .TwitterBottomInfoItem a:visited, .TwitterBottomInfoItem a:hover
 {
@@ -175,16 +193,16 @@
     font-weight: bold;
     height: 22px;
     line-height: 1.5em;
-    margin: 6px;
+    margin: 6px 6px 10px 6px;
     text-align: center;
     text-shadow: 1px 1px 1px #FFFFFF;
-    width: 100%;
+    width: 93%;
 }
 
 .TwitterMoreButtonLoading
 {
     background-image: none !important;
-    border-style : none !important;
+    border-style: none !important;
     border-width: 0px !important;
 }
 

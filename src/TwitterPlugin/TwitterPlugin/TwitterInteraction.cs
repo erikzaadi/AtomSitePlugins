@@ -52,19 +52,11 @@ namespace TwitterPluginForAtomSite
             var userElement = statusArray.Take(1).Descendants("user").SingleOrDefault();
             toReturn.User = GetTwitterUserFromUserElement(userElement);
             var tweets = from tw in statusArray
-                         let dateParts =
-                         ElementValueSingleOrDefault(tw, "created_at").Split(' ')
                          let replyToScreenName =
                          ElementValueSingleOrDefault(tw, "in_reply_to_screen_name")
                          select new TwitterStructs.Tweet
                          {
-                             CreatedAt = DateTime.Parse(
-                                 string.Format("{0} {1} {2} {3} GMT",
-                                 dateParts[1],
-                                 dateParts[2],
-                                 dateParts[5],
-                                 dateParts[3]),
-                                 System.Globalization.CultureInfo.InvariantCulture),
+                             CreatedAt = GetDateTimeFromTwitterTime(ElementValueSingleOrDefault(tw, "created_at")),
                              Source = ElementValueSingleOrDefault(tw, "source"),
                              Text = AddMarkupToTweet(ElementValueSingleOrDefault(tw, "text")),
                              InReplyToScreenName = replyToScreenName,
@@ -74,6 +66,18 @@ namespace TwitterPluginForAtomSite
             TwitterCacheManager.Set(toReturn,
                 TwitterStructs.TwitterConsts.TwitterCurrentTweets + TwitterName + PagingIndex.ToString());
             return toReturn;
+        }
+
+        private static DateTime GetDateTimeFromTwitterTime(string Value)
+        {
+            string[] dateParts = Value.Split(' ');
+            return DateTime.Parse(
+                                string.Format("{0} {1} {2} {3} GMT",
+                                dateParts[1],
+                                dateParts[2],
+                                dateParts[5],
+                                dateParts[3]),
+                                System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private static string ElementValueSingleOrDefault(XElement element, string name)
@@ -94,7 +98,14 @@ namespace TwitterPluginForAtomSite
                                    Description = ElementValueSingleOrDefault(u, "description"),
                                    Followers = ElementValueSingleOrDefault(u, "followers_count"),
                                    FriendsCount = ElementValueSingleOrDefault(u, "friends_count"),
-                                   StatusCount = ElementValueSingleOrDefault(u, "statuses_count")
+                                   StatusCount = ElementValueSingleOrDefault(u, "statuses_count"),
+                                   ProfileBackgroundColor = ElementValueSingleOrDefault(u, "profile_background_color"),
+                                   ProfileBackgroundImageURL = ElementValueSingleOrDefault(u, "profile_background_image_url"),
+                                   ProfileLinkColor = ElementValueSingleOrDefault(u, "profile_link_color"),
+                                   ProfileSideBarBorderColor = ElementValueSingleOrDefault(u, "profile_sidebar_border_color"),
+                                   ProfileSideBarFillColor = ElementValueSingleOrDefault(u, "profile_sidebar_fill_color"),
+                                   ProfileTextColor = ElementValueSingleOrDefault(u, "profile_text_color"),
+                                   HasBeenTweetingSince = GetDateTimeFromTwitterTime(ElementValueSingleOrDefault(u, "created_at"))
                                };
         }
 
