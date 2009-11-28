@@ -34,7 +34,7 @@ var TwitterPlugin = [];
 
     function _SetupFailed(data) {
         $(":input", "#TwitterSetupForm").attr('disabled', '');
-        _TwitterSetupMessage("Invalid user..", true);
+        _TwitterSetupMessage("Invalid user or password..", true);
     }
 
     function _BackFromSetup(data) {

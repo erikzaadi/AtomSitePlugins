@@ -11,9 +11,9 @@ namespace TwitterPluginForAtomSite
     {
         [ScopeAuthorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Setup(string id, int? limit, int? cachedurationinminutes, int? clientrefreshinminutes)
+        public ActionResult Setup(string id, int? limit, int? cachedurationinminutes, int? clientrefreshinminutes, string password)
         {
-            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cachedurationinminutes, clientrefreshinminutes);
+            TwitterStructs.Settings current = TwitterPluginCore.UpdateAndReturnCurrent(id, limit, cachedurationinminutes, clientrefreshinminutes, password == "*******" ? "" : password);
             if (Request.IsAjaxRequest())
                 return Json(current);
             else

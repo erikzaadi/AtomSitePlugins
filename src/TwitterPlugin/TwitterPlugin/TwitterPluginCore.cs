@@ -21,27 +21,35 @@ namespace TwitterPluginForAtomSite
             int? limit = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigLimitElement).SingleOrDefault());
             int? cacheduration = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigCacheDurationElement).SingleOrDefault());
             int? clientrefresh = GetIntFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigClientRefreshElement).SingleOrDefault());
-
+            string password = GetStringFromElement(xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigPasswordElement).SingleOrDefault());
 
             var toReturn = new TwitterStructs.Settings
             {
                 UserName = xml.Descendants(TwitterStructs.TwitterConsts.TwitterConfigUserElement).SingleOrDefault().Value,
                 Limit = limit,
                 CacheDuration = cacheduration,
-                ClientRefreshDuration = clientrefresh
+                ClientRefreshDuration = clientrefresh,
+                Password = password
             };
 
             return toReturn;
         }
 
+        private static string GetStringFromElement(XElement xElement)
+        {
+            return (xElement != null &&
+                !string.IsNullOrEmpty(xElement.Value)) ? xElement.Value : null;
+        }
+
         private static int? GetIntFromElement(XElement element)
         {
             int? toReturn = null;
+            string elemVal = GetStringFromElement(element);
+            if (string.IsNullOrEmpty(elemVal))
+                return null;
             int temp = -1;
-            if (element != null &&
-                !string.IsNullOrEmpty(element.Value) &&
-                int.TryParse(element.Value, out temp) &&
-                temp > 0)
+            if (int.TryParse(element.Value, out temp) &&
+            temp > 0)
                 toReturn = temp;
             return toReturn;
         }
@@ -65,19 +73,21 @@ namespace TwitterPluginForAtomSite
             string id,
             int? limit,
             int? CacheDuration,
-            int? ClientRefreshDuration)
+            int? ClientRefreshDuration,
+            string Password)
         {
             TwitterCacheManager.Delete(TwitterStructs.TwitterConsts.TwitterCachePrefix);
-            if (TwitterInteraction.GetTwitterUser(0, id) == null)
+            if (TwitterInteraction.GetTwitterUser(0, id, Password) == null)
                 return new TwitterStructs.Settings();
             var doc = new XDocument(new XElement(TwitterStructs.TwitterConsts.TwitterConfigRootElement,
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigUserElement, id),
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigLimitElement, limit),
                 new XElement(TwitterStructs.TwitterConsts.TwitterConfigCacheDurationElement, CacheDuration),
-                new XElement(TwitterStructs.TwitterConsts.TwitterConfigClientRefreshElement, ClientRefreshDuration)
+                new XElement(TwitterStructs.TwitterConsts.TwitterConfigClientRefreshElement, ClientRefreshDuration),
+                new XElement(TwitterStructs.TwitterConsts.TwitterConfigPasswordElement, Password)
                 ));
             doc.Save(GetTwitterConfigPath());
-            var toReturn = new TwitterStructs.Settings { Limit = limit, UserName = id };
+            var toReturn = new TwitterStructs.Settings { Limit = limit, UserName = id, ClientRefreshDuration = ClientRefreshDuration, Password = Password, CacheDuration = CacheDuration };
 
             return toReturn;
         }

@@ -15,6 +15,7 @@ namespace TwitterPluginForAtomSite
             public const string TwitterConfigLimitElement = "Limit";
             public const string TwitterConfigClientRefreshElement = "ClientRefresh";
             public const string TwitterConfigCacheDurationElement = "CacheDuration";
+            public const string TwitterConfigPasswordElement = "Password";
             public const string TwitterCurrentSettings = "TwitterCurrentSettings";
             public const string TwitterCachePrefix = "TwitterPluginCache-";
             public static string TwitterUser { get { return TwitterCachePrefix + "TwitterUser-"; } }
@@ -68,6 +69,7 @@ namespace TwitterPluginForAtomSite
             public int? Limit { get; set; }
             public int? CacheDuration { get; set; }
             public int? ClientRefreshDuration { get; set; }
+            public string Password { get; set; }
         }
 
         public class TwitterCacheObject

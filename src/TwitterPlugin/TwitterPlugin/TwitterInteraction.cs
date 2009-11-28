@@ -109,7 +109,7 @@ namespace TwitterPluginForAtomSite
                                };
         }
 
-        public static TwitterStructs.User GetTwitterUser(int CacheDuration, string TwitterName)
+        public static TwitterStructs.User GetTwitterUser(int CacheDuration, string TwitterName, string OptionalPassword)
         {
             var cached = TwitterCacheManager.Get<TwitterStructs.User>(
                 TwitterStructs.TwitterConsts.TwitterUser + TwitterName,
@@ -118,7 +118,16 @@ namespace TwitterPluginForAtomSite
                 return cached;
 
             var webClient = new System.Net.WebClient();
-            string url = string.Format("http://twitter.com/users/show/{0}.xml", TwitterName);
+            string url;
+            if (!string.IsNullOrEmpty(OptionalPassword))
+            {
+                webClient.Credentials = new System.Net.NetworkCredential(TwitterName, OptionalPassword);
+                url = string.Format("http://twitter.com/account/verify_credentials.xml");
+            }
+            else
+            {
+                url = string.Format("http://twitter.com/users/show/{0}.xml", TwitterName);
+            }
             string resultXML = string.Empty;
             try
             {
@@ -145,6 +154,70 @@ namespace TwitterPluginForAtomSite
 
             var toReturn = GetTwitterUserFromUserElement(result.Elements().SingleOrDefault());
             TwitterCacheManager.Set(toReturn, TwitterStructs.TwitterConsts.TwitterUser + TwitterName);
+            return toReturn;
+        }
+
+        public static string Tweet(string ToTweet, string TwitterName, string Password)
+        {
+            var webClient = new System.Net.WebClient();
+            string url;
+            webClient.Credentials = new System.Net.NetworkCredential(TwitterName, Password);
+            url = string.Format("http://twitter.com/statuses/update.xml");
+            string shortenedTweet = ShortenURLsForTweet(ToTweet);
+            string resultXML = string.Empty;
+            var nameValues = new System.Collections.Specialized.NameValueCollection();
+            nameValues.Add("status", shortenedTweet);
+            try
+            {
+                webClient.UploadValues(url, nameValues);
+            }
+            catch
+            {
+                return null;
+            }
+            if (string.IsNullOrEmpty(resultXML))
+                return null;
+
+            XDocument result = null;
+            try
+            {
+                result = XDocument.Parse(resultXML);
+            }
+            catch
+            {
+                return null;
+            }
+            if (result == null)
+                return null;
+
+            string statusID = result.Element("status").Descendants("id").SingleOrDefault().Value;
+
+            return string.Format("http://twitter.com/{0}/status/{1}", TwitterName, statusID);
+        }
+
+        private static string ShortenURLsForTweet(string ToTweet)
+        {
+            string linkRegex = @"((https|http):\/\/+[\w\d\.\-_\?\&\%\/\=\#\:]*)";
+            DoForAllMatches(ToTweet, linkRegex, p =>
+                {
+                    ToTweet = ToTweet.Replace(p, ShortenURL(p));
+                });
+            return ToTweet;
+        }
+
+        private static string ShortenURL(string URL)
+        {
+            var webClient = new System.Net.WebClient();
+            string url = string.Format("http://1url.com/?api=1url&u={0}", URL);
+            string toReturn = string.Empty;
+            try
+            {
+                toReturn = webClient.DownloadString(url);
+            }
+            catch
+            {
+                return null;
+            }
             return toReturn;
         }
 

@@ -1,4 +1,20 @@
-﻿.TwitterSetupLabel
+﻿.TwitterSetupWidget fieldset
+{
+    border: solid 1px #666;
+    padding : 5px;
+}
+
+.TwitterSetupWidget legend
+{
+    font-weight :bold;
+    padding : 4px;
+}
+
+.TwitterSetupOptionalContent
+{
+}
+
+.TwitterSetupLabel
 {
     width: 180px;
     display: block;
@@ -14,6 +30,7 @@
 .TwitterOptional
 {
     font-style: italic;
+    padding-left:  10px;
     padding-bottom: 10px;
 }
 
