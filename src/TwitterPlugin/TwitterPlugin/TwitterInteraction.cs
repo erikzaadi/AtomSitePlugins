@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Net;
+using System.IO;
 
 namespace TwitterPluginForAtomSite
 {
@@ -156,20 +158,149 @@ namespace TwitterPluginForAtomSite
             TwitterCacheManager.Set(toReturn, TwitterStructs.TwitterConsts.TwitterUser + TwitterName);
             return toReturn;
         }
+        /*
+        private const string TwitterJsonUrl = "http://twitter.com/statuses/update.json";
+        private const string TwitterUser = "your_user";
+        private const string TwitterPass = "your_pass";
+
+        private static void SendTwitterMessage(string message)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(TwitterJsonUrl);
+
+                string post = string.Empty;
+                using (TextWriter writer = new StringWriter())
+                {
+                    writer.Write("status={0}", HttpUtility.UrlEncode(message));
+                    post = writer.ToString();
+                    Console.WriteLine("Post: {0}", post);
+                }
+
+                SetRequestParams(request);
+
+                request.Credentials = new NetworkCredential(TwitterUser, TwitterPass);
+
+                using (Stream requestStream = request.GetRequestStream())
+                {
+                    using (StreamWriter writer = new StreamWriter(requestStream))
+                    {
+                        writer.Write(post);
+                    }
+                }
+
+                Console.WriteLine("Length: {0}", request.ContentLength);
+                Console.WriteLine("Address: {0}", request.Address);
+
+                WebResponse response = request.GetResponse();
+                string content;
+
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(responseStream))
+                    {
+                        content = reader.ReadToEnd();
+                    }
+                }
+
+                Console.WriteLine(content);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private static void SetRequestParams(HttpWebRequest request)
+        {
+            request.Timeout = 500000;
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            //request.Referer = "http://www.orionsbelt.eu";
+            request.UserAgent = "Orion's Belt Notifier Bot";
+#if USE_PROXY
+    request.Proxy = new WebProxy("http://localhost:8080", false);
+#endif
+        }
+        */
+
+        /*
+ * A function to post an update to Twitter programmatically
+ * Author: Danny Battison
+ * Contact: gabehabe@hotmail.com
+ */
+
+        /// <summary>
+        /// Post an update to a Twitter acount
+        /// </summary>
+        /// <param name="username">The username of the account</param>
+        /// <param name="password">The password of the account</param>
+        /// <param name="tweet">The status to post</param>
+        public static string PostTweet(string username, string password, string tweet)
+        {
+            try
+            {
+                // encode the username/password
+                string user = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(username + ":" + password));
+                // determine what we want to upload as a status
+                byte[] bytes = System.Text.Encoding.ASCII.GetBytes("status=" + tweet);
+                // connect with the update page
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://twitter.com/statuses/update.xml");
+                // set the method to POST
+                request.Method = "POST";
+                request.ServicePoint.Expect100Continue = false; // thanks to argodev for this recent change!
+                // set the authorisation levels
+                request.Headers.Add("Authorization", "Basic " + user);
+                request.ContentType = "application/x-www-form-urlencoded";
+                // set the length of the content
+                request.ContentLength = bytes.Length;
+
+                // set up the stream
+                Stream reqStream = request.GetRequestStream();
+                // write to the stream
+                reqStream.Write(bytes, 0, bytes.Length);
+                // close the stream
+                reqStream.Close();
+
+                WebResponse response = request.GetResponse();
+                string content;
+
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(responseStream))
+                    {
+                        content = reader.ReadToEnd();
+                    }
+                }
+                return XDocument.Parse(content).Element("status").Descendants("id").SingleOrDefault().Value;
+            }
+            catch
+            {
+                return null;
+            }       
+        }
 
         public static string Tweet(string ToTweet, string TwitterName, string Password)
         {
+
+            string shortenedTweet = ShortenURLsForTweet(ToTweet);
+
+            return PostTweet(TwitterName, Password, shortenedTweet);
+
             var webClient = new System.Net.WebClient();
             string url;
             webClient.Credentials = new System.Net.NetworkCredential(TwitterName, Password);
             url = string.Format("http://twitter.com/statuses/update.xml");
-            string shortenedTweet = ShortenURLsForTweet(ToTweet);
-            string resultXML = string.Empty;
+            
             var nameValues = new System.Collections.Specialized.NameValueCollection();
             nameValues.Add("status", shortenedTweet);
+
+            string resultXML = null;
+
             try
             {
-                webClient.UploadValues(url, nameValues);
+                resultXML = webClient.UploadString(url, string.Format("status={0}", shortenedTweet));
             }
             catch
             {
@@ -177,6 +308,7 @@ namespace TwitterPluginForAtomSite
             }
             if (string.IsNullOrEmpty(resultXML))
                 return null;
+
 
             XDocument result = null;
             try

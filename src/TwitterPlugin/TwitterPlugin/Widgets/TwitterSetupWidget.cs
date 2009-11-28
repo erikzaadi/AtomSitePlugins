@@ -21,7 +21,8 @@ namespace TwitterPluginForAtomSite.Widgets
             HtmlHelper helper = new HtmlHelper(ctx, new ViewDataContainer() { ViewData = ctx.ViewData });
             System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(helper, Name, new Models.SetupModel { TwitterSettings = TwitterPluginCore.GetCurrent() });
         }
-        class ViewDataContainer : IViewDataContainer
+
+              class ViewDataContainer : IViewDataContainer
         {
             public ViewDataDictionary ViewData { get; set; }
         }

@@ -87,7 +87,6 @@
   <ItemGroup>
     <Compile Include="Models\PublishModel.cs" />
     <Compile Include="TwitterCacheManager.cs" />
-    <Compile Include="Widgets\TwitterPublishWidget.cs" />
     <Compile Include="Widgets\TwitterWidget.cs" />
     <Compile Include="TwitterInteraction.cs" />
     <Compile Include="Models\SetupModel.cs" />

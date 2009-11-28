@@ -110,5 +110,37 @@ var TwitterPlugin = [];
     }
     // Twitter Client End
     TwitterPlugin.InitTwitterPublishSetup = function() {
+        $("button", "#TwitterPublishWidget").click(_TwitterPublishSubmitted);
     };
+
+    function _BackFromPublish(data) {
+        console.log(data);
+        if (!data || !data.Success)
+            return _PublishFailed(data);
+        $(":input", "#TwitterPublishWidget").attr('disabled', '');
+        _TwitterSetupMessage("Tweeted successfully : " + data.TweetUrl, false);
+    }
+
+    function _PublishFailed(data) {
+        $(":input", "#TwitterPublishWidget").attr('disabled', '');
+        _TwitterSetupMessage("Failed to Tweet : " + data.Error, true);
+    }
+
+    function _TwitterPublishSubmitted() {
+        var $form = $("#TwitterPublishWidget");
+        _TwitterSetupMessage("Loading..", false);
+        $(":input", $form).attr('disabled', 'disabled');
+        $.ajax(
+    {
+        url: $("#url", $form).val(),
+        data: $.param($(":input", $form)),
+        dataType: 'json',
+        type: 'post',
+        success: _BackFromPublish,
+        error: _PublishFailed
+    });
+        return false;
+    }
+
+
 })(jQuery);

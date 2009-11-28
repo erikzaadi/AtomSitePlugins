@@ -17,7 +17,10 @@ namespace TwitterPluginForAtomSite
         {
             RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterWidget>(container);
             RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterSetupWidget>(container);
-            RegisterWidget<TwitterPluginForAtomSite.Widgets.TwitterPublishWidget>(container);
+            var assets = new List<AtomSite.Domain.Asset>();
+            assets.Add(new AtomSite.Domain.Asset("TwitterPlugin.css", "admin"));
+            assets.Add(new AtomSite.Domain.Asset("TwitterPlugin.js", "admin"));
+            RegisterCompositeWidget(container, "TwitterPublishWidget", "Twitter", "Publish", assets, "TwitterPlugin.InitTwitterPublishSetup();");
             RegisterController<TwitterController>(container);
         }
 

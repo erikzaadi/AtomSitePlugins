@@ -23,6 +23,9 @@ namespace TwitterPluginForAtomSite
             public const int TwitterDefaultClientRefreshDuration = 5;
             public const int TwitterDefaultCacheDuration = 10;
             public const int TwitterDefaultLimit = 5;
+            public const string StatusTemplateTitleTag = "{TITLE}";
+            public const string StatusTemplateURLTag = "{POSTURL}";
+            public static string DefaultStatusTemplate { get { return string.Format("Just blogged : {0} {1}", StatusTemplateTitleTag, StatusTemplateURLTag); } }
         }
         public class Tweet
         {

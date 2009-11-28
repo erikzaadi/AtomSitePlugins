@@ -42,8 +42,7 @@
             </div>
         </fieldset>
         <div>
-            <span class="TwitterSetupLabel" id="TwitterSetupMessage"></span>&nbsp;<input type="submit"
-                value="Update" />
+            <input type="submit" value="Update" />&nbsp;<span class="TwitterSetupLabel" id="TwitterSetupMessage"></span>
         </div>
     </div>
     <% Html.EndForm();  %>
