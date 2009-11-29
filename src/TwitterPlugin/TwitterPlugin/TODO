@@ -1,4 +1,4 @@
-﻿Improve logging?
+Improve logging?
 
 Move to widget page instead of settings?
 
@@ -26,3 +26,5 @@ where format = json/xml
 
 
 http://devblog.yedda.com/index.php/twitter-c-library/
+
+Use OAuth to authenticate, in order to not save password + enable "Sent From AtomSite" ?
