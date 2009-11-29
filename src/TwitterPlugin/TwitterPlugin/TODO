@@ -24,6 +24,8 @@ where format = json/xml
 <textarea id="status" name="status"></textarea><button type="Submit">Tweet!</button>
 </form>
 
+Alter default template to include tags -> "Just Blogged : {PostUrl} - {Title} {Tags}"
+Which will result in something like :=> "Just Blogged : http://short.url/guid - The Title of the post #tag1 #tagN" 
 
 http://devblog.yedda.com/index.php/twitter-c-library/
 
