@@ -1,1 +1,1 @@
-src/GA4AtomSite,src/Github,src/SubDomainToCollectionRedirector,src/TwitterPlugin
+{"subprojects":[{"name":"Google Analytics For Atom Site","src":"src/GA4AtomSite"},{"name":"Github plugin","src":"src/Github"},{"name":"Sub Domain To Collection Redirector","src":"src/SubDomainToCollectionRedirector"},{"name":"Twitter Plugin","src":"src/TwitterPlugin"}]}
