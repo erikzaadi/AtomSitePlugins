@@ -100,6 +100,7 @@
 
 .TwitterStatus
 {
+    word-wrap: break-word;
     padding: 5px;
     border-bottom: dotted thin #CCC;
     clear: both;
