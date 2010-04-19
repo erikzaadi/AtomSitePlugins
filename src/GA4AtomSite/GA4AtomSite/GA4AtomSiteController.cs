@@ -1,34 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using AtomSite.Domain;
 using AtomSite.WebCore;
+using AtomSite.Repository;
 
 namespace GA4AtomSite
 {
     public class GA4AtomSiteController : BaseController
     {
+        protected readonly IAppServiceRepository AppServiceRepository;
+
+        public GA4AtomSiteController(IAppServiceRepository appServiceRepository)
+        {
+            AppServiceRepository = appServiceRepository;
+        }
+
+        [ScopeAuthorize(Action = AuthAction.UpdateServiceDoc, Roles = AuthRoles.AuthorOrAdmin)]
         [AcceptVerbs(HttpVerbs.Post)]
-        [ScopeAuthorize]
-        public ActionResult Set(string GAID, string CollectionID)
+        [ActionName("Config")]
+        public ActionResult PostConfig(GA4AtomSiteConfigModel m)
         {
-            GA4AtomSiteUtils.SetGAIDForCollectionID(GAID, CollectionID);
-            if (Request.IsAjaxRequest())
-                return Json(new { success = !string.IsNullOrEmpty(GAID), GAID = GAID });
-            else
-                return RedirectToRoute(new { controller = "Admin" });
+            if (string.IsNullOrEmpty(m.GoogleAccountID) || m.GoogleAccountID.Trim().Length == 0)
+                ModelState.AddModelError("GoogleAccountID", "Please supply a Google Account ID to track.");
+
+            if (ModelState.IsValid)
+            {
+                var appSvc = AppServiceRepository.GetService();
+                var include = appSvc.GetInclude<GA4AtomSiteInclude>(m.IncludePath);
+                include.GoogleAccountID = m.GoogleAccountID;
+                AppServiceRepository.UpdateService(appSvc);
+                return Json(new { success = true, includePath = m.IncludePath });
+            }
+            return PartialView("GA4AtomSiteConfig", m);
         }
 
-        [ScopeAuthorize]
-        public ActionResult GetAdmin()
+        [ScopeAuthorize(Action = AuthAction.UpdateServiceDoc, Roles = AuthRoles.AuthorOrAdmin)]
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult Config(GA4AtomSiteConfigModel m)
         {
-            return PartialView("Ga4AtomSiteAdminWidget", new Models.GA4AtomSiteAdminModel { GAID = GA4AtomSiteUtils.GetGAIDForCollection(Collection), CollectionID = Collection.Id.Workspace + Collection.Id.Collection });
+            if (m.IncludePath != null)
+            {
+                var include = AppService.GetInclude<GA4AtomSiteInclude>(m.IncludePath);
+                m.GoogleAccountID = include.GoogleAccountID;
+            }
+            return PartialView("GA4AtomSiteConfig", m);
         }
 
-        public ActionResult Get()
+        public ActionResult Widget(Include include)
         {
-            return PartialView("Ga4AtomSiteWidget", new GA4AtomSite.Models.GA4AtomSiteModel(GA4AtomSiteUtils.GetGAIDByCollectionID(base.Collection.Id.Workspace + base.Collection.Id.Collection)));
+            var gaInclude = new GA4AtomSiteInclude(include);
+
+            if (string.IsNullOrEmpty(gaInclude.GoogleAccountID))
+                return new EmptyResult();
+
+            return PartialView("GA4AtomSiteWidget", new GA4AtomSiteModel { GoogleAccountID = gaInclude.GoogleAccountID });
         }
     }
 }

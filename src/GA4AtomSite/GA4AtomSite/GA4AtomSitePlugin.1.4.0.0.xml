@@ -5,8 +5,8 @@
             xmlns:thread="http://purl.org/syndication/thread/1.0"
             xmlns:plug="http://atomsite.net/info/Plugins">
     <atom:title>GA4AtomSite Plugin</atom:title>
-    <plug:type>GA4AtomSite.GA4AtomSitePlugin, GA4AtomSite, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null</plug:type>
-    <plug:compatibleVersion>1.3.0.0</plug:compatibleVersion>
+    <plug:type>GA4AtomSite.GA4AtomSitePlugin, GA4AtomSite, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null</plug:type>
+    <plug:compatibleVersion>1.4.0.0</plug:compatibleVersion>
     <plug:file name="bin\GA.NET.Core.dll" />
     <plug:file name="bin\GA.NET.MVC.dll" />
     <plug:file name="bin\GA4AtomSite.dll" />
@@ -14,12 +14,12 @@
         <plug:name>Ga4AtomSiteWidget</plug:name>
         <plug:description>Provides a Google Analytics tracker, with support for javascript disabled browsers</plug:description>
     </plug:widget>
-    <plug:name>Ga4AtomSiteAdminWidget</plug:name>
-    <plug:description>Provides a Google Analytics tracker, with support for javascript disabled browsers</plug:description>
-    <plug:file name="css\default\GA4AtomSite.css" />
-    <plug:file name="js\default\" />
+    <plug:widget>
+        <plug:name>Ga4AtomSiteConfig</plug:name>
+        <plug:description>Sets up the Google Analytics Account.</plug:description>
+        <plug:file name="themes\default\Ga4AtomSiteConfig.ascx" />
     </plug:widget>
-    <plug:homepage>http://blog.erikzaadi.com/pages/GoogleAnalyticsPlugin.xhtml</plug:homepage>
+    <plug:homepage>http://erikzaadi.com/pages/GoogleAnalyticsPlugin</plug:homepage>
     <atom:content type="xhtml">
         <div xmlns="http://www.w3.org/1999/xhtml">
             <!--Add description..-->
@@ -29,12 +29,12 @@
     <atom:category term="Google Analytics" />
     <atom:category term="Analytics" />
     <atom:category term="Widget" />
-    <atom:published>2009-10-27T13:58:45.8001718Z</atom:published>
-    <atom:updated>2009-10-27T13:58:45.8001718Z</atom:updated>
+    <atom:published>2010-04-19T13:58:45.8001718Z</atom:published>
+    <atom:updated>2010-04-19T13:58:45.8001718Z</atom:updated>
     <atom:id>tag:atomsite.net,2009:plugins,GA4AtomSite</atom:id>
     <atom:author svc:id="erikzaadi">
         <atom:name>Erik Zaadi</atom:name>
         <atom:uri>http://blog.erikzaadi.com</atom:uri>
-        <!--<atom:email></atom:email>-->
+        <atom:email>erik.zaadi@gmail.com</atom:email>
     </atom:author>
 </atom:entry>

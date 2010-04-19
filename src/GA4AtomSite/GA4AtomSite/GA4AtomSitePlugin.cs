@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Mvc;
+using AtomSite.Domain;
 using AtomSite.WebCore;
+using StructureMap;
 
 namespace GA4AtomSite
 {
@@ -11,22 +14,42 @@ namespace GA4AtomSite
         public GA4AtomSitePlugin(ILogService logger)
             : base(logger)
         {
+            DefaultMerit = (int)MeritLevel.Default;
+            CanUninstall = true;
         }
 
-        public override void Register(StructureMap.IContainer container, List<AtomSite.WebCore.SiteRoute> routes, System.Web.Mvc.ViewEngineCollection viewEngines, System.Web.Mvc.ModelBinderDictionary modelBinders, ICollection<AtomSite.Domain.Asset> globalAssets)
+        public override void Register(IContainer container, List<SiteRoute> routes, ViewEngineCollection viewEngines, ModelBinderDictionary modelBinders, ICollection<Asset> globalAssets)
         {
-            base.RegisterController<GA4AtomSiteController>(container);
-            RegisterCompositeWidget(container, "Ga4AtomSiteWidget", "GA4AtomSite", "Get");
-            RegisterCompositeWidget(container, "Ga4AtomSiteAdminWidget", "GA4AtomSite", "GetAdmin");
+            RegisterWidget(container, new CompositeWidget("GA4AtomSiteWidget", "GA4AtomSite", "Widget")
+            {
+                Description = "This widget adds Google Analytics tracking code to the page, that is capable of tracking javascript disabled browsers as well.",
+                SupportedScopes = SupportedScopes.All,
+                OnGetConfigInclude = (p) => new ConfigLinkInclude(p, "GA4AtomSite", "Config"),
+                OnValidate = (i) =>
+                {
+                    var gaInclude = new GA4AtomSiteInclude(i);
+                    return !string.IsNullOrEmpty(gaInclude.GoogleAccountID);
+                },
+                AreaHints = new[] { "foot", "tail" }
+            });
+            RegisterController<GA4AtomSiteController>(container);
         }
 
-        public override AtomSite.Domain.PluginState Setup(StructureMap.IContainer container, string appPath)
+        public override PluginState Setup(IContainer container, string appPath)
         {
-            base.SetupIncludeInPageArea(container, "BlogListing", "sidemid", "Ga4AtomSiteWidget");
-            base.SetupIncludeInPageArea(container, "BlogEntry", "content", "Ga4AtomSiteWidget");
-            base.SetupIncludeInPageArea(container, "AdminSettingsCollection", "settingsLeft", "Ga4AtomSiteAdminWidget");
+            LogService.Info("Setting up Google Analytics Plugin");
+
+            LogService.Info("Finished Setting up Google Analytics Plugin");
 
             return base.Setup(container, appPath);
+        }
+
+        public override PluginState Uninstall(IContainer container, string appPath)
+        {
+            Plugin plugin = GetEmbeddedPluginEntry();
+            base.UninstallInclude(container, (i) => i.Name == "GA4AtomSiteWidget");
+            UninstallPluginFiles(container, plugin, appPath);
+            return base.Uninstall(container, appPath);
         }
     }
 }

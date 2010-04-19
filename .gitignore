@@ -27,3 +27,9 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+[Pp]ublished/*
+[Mm]aterials/*
+*.pidb
+*.userprefs
+*~
+.idea
