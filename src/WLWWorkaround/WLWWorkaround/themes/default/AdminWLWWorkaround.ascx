@@ -1,4 +1,4 @@
-﻿<%@  Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<WLWWorkaround.WLWWorkaroundModel>" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewUserControl<WLWWorkaround.WLWWorkaroundModel>" %>
 <html>
 <head>
     <title>Windows Live Workaround for AtomSite</title>
@@ -7,10 +7,11 @@
         {
             margin: 0;
             padding: 0;
-            background-color:#F7F7F7
+            background-color: #F7F7F7;
         }
         .container
         {
+            background-color: #FAFAFA;
             display: block !important;
             width: 500px;
             border: solid 1px #666;
@@ -18,9 +19,9 @@
             -webkit-border-radius: 4px;
             -moz-border-radius: 4px;
             padding: 15px;
-            margin-top:100px;
-            margin-left:auto;
-            margin-right:auto;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
         }
         #WLWWorkaround label
         {
@@ -82,7 +83,7 @@
                { %>
             <h4>
                 Disable the applied workaround</h4>
-            <% using (Html.BeginForm("WLWWorkaroundDisable", "WLWWorkaround", FormMethod.Post))
+            <% using (Html.BeginForm("Disable", "WLWWorkaround", FormMethod.Post))
                { %>
             <div>
                 <button type="submit">
@@ -94,7 +95,7 @@
                { %>
             <h4>
                 Credentials</h4>
-            <% using (Html.BeginForm("WLWWorkaround", "WLWWorkaround", FormMethod.Post))
+            <% using (Html.BeginForm("Activate", "WLWWorkaround", FormMethod.Post))
                { %>
             <div>
                 <label>

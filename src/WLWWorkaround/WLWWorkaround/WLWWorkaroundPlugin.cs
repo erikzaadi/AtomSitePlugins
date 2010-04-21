@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using AtomSite.Domain;
 using AtomSite.WebCore;
 using StructureMap;
+using System;
+using System.Web.Routing;
 
 namespace WLWWorkaround
 {
@@ -26,12 +28,18 @@ namespace WLWWorkaround
 </svc:include>
              */
 
-            var wlw = new WLWService();
-            container.Inject(typeof(IWLWService), wlw);
-            container.Inject(typeof(IAuthenticateService), new WLWWorkaroundAuthenticateService(wlw));
+            container.Inject(typeof(IAuthenticateService), new WLWWorkaroundAuthenticateService());
 
             RegisterController<WLWWorkaroundController>(container);
             RegisterViewWidget(container, "AdminWLWWorkaround.aspx");
+
+            routes.Insert(0, new SiteRoute()
+             {
+                 Name = "WLWWorkaround",
+                 Route = new Route("WLWWorkaround/{Action}",
+                   new RouteValueDictionary(new { controller = "WLWWorkaround", action = "Index" }), new MvcRouteHandler()),
+                 Merit = (int)MeritLevel.Max
+             });
         }
 
         public override PluginState Setup(IContainer container, string appPath)

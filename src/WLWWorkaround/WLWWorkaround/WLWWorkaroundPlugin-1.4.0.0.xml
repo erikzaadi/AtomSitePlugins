@@ -4,7 +4,7 @@
             xmlns:app="http://www.w3.org/2007/app"
             xmlns:thread="http://purl.org/syndication/thread/1.0"
             xmlns:plug="http://atomsite.net/info/Plugins">
-    <atom:title>GA4AtomSite Plugin</atom:title>
+    <atom:title>Windows Live Writer Workaround Plugin</atom:title>
     <plug:type>WLWWorkaround.WLWWorkaroundPlugin, WLWWorkaround, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null</plug:type>
     <plug:compatibleVersion>1.4.0.0</plug:compatibleVersion>
     <plug:file name="bin\WLWWorkaround.dll" />
@@ -23,7 +23,7 @@
     <atom:id>tag:atomsite.net,2009:plugins,WLWWorkaround</atom:id>
     <atom:author svc:id="erikzaadi">
         <atom:name>Erik Zaadi</atom:name>
-        <atom:uri>http://blog.erikzaadi.com</atom:uri>
+        <atom:uri>http://erikzaadi.com</atom:uri>
         <atom:email>erik.zaadi@gmail.com</atom:email>
     </atom:author>
 </atom:entry>

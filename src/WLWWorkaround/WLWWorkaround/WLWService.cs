@@ -1,25 +1,14 @@
 ﻿using System;
 using System.Web;
+using System.Web.Mvc;
 using AtomSite.WebCore;
+using StructureMap;
 
 namespace WLWWorkaround
 {
-    public class WLWService : IWLWService
+    public class WLWService
     {
         public static string ApplicationKey { get { return "WLWIdentity"; } }
-
-        protected HttpContext CurrentContext
-        {
-            get
-            {
-                return HttpContext.Current;
-            }
-        }
-
-        public StructureMap.IContainer Container
-        {
-            get { return CurrentContext.Application["Container"] as StructureMap.Container; }
-        }
 
         /// <summary>
         /// Authenticates a user and enableds the Windows Live Writer workaround
@@ -28,7 +17,12 @@ namespace WLWWorkaround
         /// <param name="Password"></param>
         /// <param name="ExpiresInMinutes">Number of minutes to keep the workaround alive</param>
         /// <returns>true if authenticated</returns>
-        public bool Authenticate(string Username, string Password, int ExpiresInMinutes)
+        public static bool Authenticate(
+            string Username,
+            string Password,
+            int ExpiresInMinutes,
+            IContainer Container,
+            HttpContextBase CurrentContext)
         {
             var userRepo = Container.GetInstance<AtomSite.Repository.IUserRepository>();
 
@@ -48,17 +42,18 @@ namespace WLWWorkaround
         }
 
 
-        public void SetWLWUserIfAvailable(ServerApp app)
+        public static void SetWLWUserIfAvailable(
+            HttpContext CurrentContext)
         {
-            if (app.Context.Request.UserAgent == "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Windows Live Writer 1.0)")
+            if (CurrentContext.Request.UserAgent == "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Windows Live Writer 1.0)")
             {
-                var obj = app.Context.Application[ApplicationKey] as WLWUser;
+                var obj = CurrentContext.Application[ApplicationKey] as WLWUser;
                 if (obj != null
-                    && obj.UserHost == app.Context.Request.UserHostName
-                    && obj.UserAddress == app.Context.Request.UserHostAddress
+                    && obj.UserHost == CurrentContext.Request.UserHostName
+                    && obj.UserAddress == CurrentContext.Request.UserHostAddress
                     && DateTime.Now < obj.Expiration)
                 {
-                    app.Context.User = new System.Security.Principal.GenericPrincipal(obj.User, new string[0]);
+                    CurrentContext.User = new System.Security.Principal.GenericPrincipal(obj.User, new string[0]);
                     System.Threading.Thread.CurrentPrincipal = CurrentContext.User;
                 }
             }
@@ -69,22 +64,18 @@ namespace WLWWorkaround
         /// Disables the Windows Live Writer workaround
         /// </summary>
         /// <returns>true if the workaround was active</returns>
-        public bool Disable()
+        public static void Disable(HttpContextBase CurrentContext)
         {
-            var isActive = Active;
-            if (isActive)
+            if (IsActive(CurrentContext))
                 CurrentContext.Application.Remove(ApplicationKey);
-            return isActive;
         }
 
-        public bool Active
+        public static bool IsActive(HttpContextBase CurrentContext)
         {
-            get
-            {
-                var obj = CurrentContext.Application[ApplicationKey] as WLWUser;
-                return obj != null;
-            }
+            var obj = CurrentContext.Application[ApplicationKey] as WLWUser;
+            return obj != null;
         }
+
     }
 }
 
