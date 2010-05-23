@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom"
+            xmlns:svc="http://atomsite.net/info/Service"
+            xmlns:app="http://www.w3.org/2007/app"
+            xmlns:thread="http://purl.org/syndication/thread/1.0"
+            xmlns:plug="http://atomsite.net/info/Plugins">
+  <atom:title>Additional Widgets Plugin</atom:title>
+  <plug:type>AdditionalWidgets.AdditionalWidgetsPlugin, AdditionalWidgets, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null</plug:type>
+  <plug:compatibleVersion>1.4.0.0</plug:compatibleVersion>
+  <plug:widget>
+    <plug:name>RecentPostsForCategoryWidget</plug:name>
+    <plug:description>Shows a recent posts for a specific category in a collection</plug:description>
+    <plug:file name="themes\default\RecentPostsForCategoryWidget.ascx" />
+  </plug:widget>
+  <plug:widget>
+    <plug:name>RecentPostsForCategorySetupWidget</plug:name>
+    <plug:description>Sets up the recent post for a category widget.</plug:description>
+    <plug:file name="themes\default\RecentPostsForCategorySetupWidget.ascx" />
+  </plug:widget>
+  <plug:homepage>http://erikzaadi.com/pages/AdditionalWidgets</plug:homepage>
+  <atom:content type="xhtml">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <!--Add description..-->
+    </div>
+  </atom:content>
+  <atom:category term="Widget" />
+  <atom:published>2010-05-23T13:58:45.8001718Z</atom:published>
+  <atom:updated>2010-05-23T13:58:45.8001718Z</atom:updated>
+  <atom:id>tag:atomsite.net,2009:plugins,AdditionalWidgets</atom:id>
+  <atom:author svc:id="erikzaadi">
+    <atom:name>Erik Zaadi</atom:name>
+    <atom:uri>http://erikzaadi.com</atom:uri>
+    <atom:email>erik.zaadi@gmail.com</atom:email>
+  </atom:author>
+</atom:entry>
