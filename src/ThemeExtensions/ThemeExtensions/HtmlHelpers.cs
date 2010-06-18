@@ -9,7 +9,7 @@ namespace ThemeExtensions
 {
     public static class HtmlHelpers
     {
-        private static IThemeService GethemeService(HtmlHelper helper)
+        private static IThemeService GetThemeService(HtmlHelper helper)
         {
             return ThemeService.GetCurrent(helper.ViewContext.RequestContext);
         }
@@ -24,6 +24,12 @@ namespace ThemeExtensions
             return theme.GetProperty<TType>(propertyName) ?? defaultValue;
         }
 
+        private static Theme GetTheme(HtmlHelper helper)
+        {
+            var themeName = ThemeViewEngine.GetCurrentThemeName(helper.ViewContext.RequestContext);
+            return GetThemeService(helper).GetTheme(themeName);
+        }
+
         public static void IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Action<TType> doWithProperty) where TType : class
         {
             IfThemeProperty(helper, propertyName, doWithProperty, null);
@@ -31,13 +37,14 @@ namespace ThemeExtensions
 
         public static void IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Action<TType> doWithProperty, TType defaultValue) where TType : class
         {
-            var themeName = ThemeViewEngine.GetCurrentThemeName(helper.ViewContext.RequestContext);
-            var theme = GethemeService(helper).GetTheme(themeName);
+            var theme = GetTheme(helper);
 
             var result = GetThemeProperty(theme, propertyName, defaultValue);
 
             doWithProperty(result);
         }
+
+   
 
         public static string IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Func<TType, string> doWithProperty) where TType : class
         {
@@ -51,6 +58,17 @@ namespace ThemeExtensions
 
             return toReturn;
         }
+
+        public static TType GetThemeProperty<TType>(this HtmlHelper helper, string propertyName) where TType : class
+        {
+            return GetThemeProperty<TType>(helper, propertyName, null);
+        }
+
+        public static TType GetThemeProperty<TType>(this HtmlHelper helper, string propertyName, TType defaultValue) where TType : class
+        {
+            return GetThemeProperty(GetTheme(helper), propertyName, defaultValue);
+        }
+
 
         public static IEnumerable<AtomEntry> GetTrackBacks(this HtmlHelper helper, FeedModel feedModel)
         {
@@ -85,7 +103,7 @@ namespace ThemeExtensions
                        ? GetUrlHelper(helper).RouteIdUrl("AtomPubFeed", pageModel.Collection.Id)
                        : null;
         }
-
+         
         public static string GetCurrentCommentsFeed(this HtmlHelper helper, PageModel pageModel)
         {
             return (pageModel != null && pageModel.Collection != null && pageModel.Collection.Id != null)
