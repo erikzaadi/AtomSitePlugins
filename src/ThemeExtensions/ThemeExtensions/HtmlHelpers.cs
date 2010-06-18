@@ -4,63 +4,66 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using AtomSite.Domain;
+using AtomSite.Repository;
 using AtomSite.WebCore;
+using StructureMap;
 
 namespace ThemeExtensions
 {
     public static class HtmlHelpers
     {
-        private static IThemeService GetThemeService(HtmlHelper helper)
+        private static AppService _GetService(HtmlHelper helper)
+        {
+            IContainer container = (IContainer)helper.ViewContext.HttpContext.Application["Container"];
+            return container.GetInstance<IAppServiceRepository>().GetService();
+        }
+
+        private static IThemeService _GetThemeService(HtmlHelper helper)
         {
             return ThemeService.GetCurrent(helper.ViewContext.RequestContext);
         }
 
-        private static UrlHelper GetUrlHelper(HtmlHelper helper)
+        private static UrlHelper _GetUrlHelper(HtmlHelper helper)
         {
             return new UrlHelper(helper.ViewContext.RequestContext);
         }
-
-        private static TType GetThemeProperty<TType>(Theme theme, string propertyName, TType defaultValue) where TType : class
-        {
-            return theme.GetValue<TType>(XName.Get(propertyName, Atom.ThemeNs.NamespaceName)) ?? defaultValue;
-        }
-
-        private static bool GetThemeBooleanProperty(Theme theme, string propertyName, bool defaultValue) 
-        {
-            return theme.GetBooleanWithDefault(XName.Get(propertyName, Atom.ThemeNs.NamespaceName),defaultValue);
-        }
-
-        private static Theme GetTheme(HtmlHelper helper)
+    
+        private static Theme _GetTheme(HtmlHelper helper)
         {
             var themeName = ThemeViewEngine.GetCurrentThemeName(helper.ViewContext.RequestContext);
-            return GetThemeService(helper).GetTheme(themeName);
+            return _GetThemeService(helper).GetTheme(themeName);
         }
 
-        public static void IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Action<TType> doWithProperty) where TType : class
+        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName, bool defaultValue)
         {
-            IfThemeProperty(helper, propertyName, doWithProperty, null);
+            //traverse scope first
+            var service = _GetService(helper);
+            IRouteService r = RouteService.GetCurrent(helper.ViewContext.RequestContext);
+            var scope = r.GetScope();
+            var pages = service.GetServicePages(scope, "", "");
+
+            var propertyValue = pages.Select(p => p.GetBooleanProperty(XName.Get(propertyName, Atom.ThemeNs.NamespaceName))).Where(a => a.HasValue).LastOrDefault();
+            if (propertyValue.HasValue)
+                return propertyValue.Value;
+
+            var theme = _GetTheme(helper);
+            return theme.GetBooleanWithDefault(XName.Get(propertyName, Atom.ThemeNs.NamespaceName), defaultValue);
         }
 
-        public static void IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Action<TType> doWithProperty, TType defaultValue) where TType : class
+        public static TType GetThemeProperty<TType>(HtmlHelper helper, string propertyName, TType defaultValue) where TType : class
         {
-            var theme = GetTheme(helper);
+            //traverse scope first
+            var service = _GetService(helper);
+            IRouteService r = RouteService.GetCurrent(helper.ViewContext.RequestContext);
+            var scope = r.GetScope();
+            var pages = service.GetServicePages(scope, "", "");
 
-            var result = GetThemeProperty(theme, propertyName, defaultValue);
+            var propertyValue = pages.Select(p => p.GetProperty<TType>(XName.Get(propertyName, Atom.ThemeNs.NamespaceName))).Where(a => a != null).LastOrDefault();
+            if (propertyValue != null)
+                return propertyValue;
 
-            doWithProperty(result);
-        }
-
-        public static string IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Func<TType, string> doWithProperty) where TType : class
-        {
-            return IfThemeProperty(helper, propertyName, doWithProperty, null);
-        }
-
-        public static string IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Func<TType, string> doWithProperty, TType defaultValue) where TType : class
-        {
-            var toReturn = "";
-            IfThemeProperty(helper, propertyName, (result) => toReturn = doWithProperty(result), defaultValue);
-
-            return toReturn;
+            var theme = _GetTheme(helper);
+            return theme.GetValue<TType>(XName.Get(propertyName, Atom.ThemeNs.NamespaceName)) ?? defaultValue;
         }
 
         public static TType GetThemeProperty<TType>(this HtmlHelper helper, string propertyName) where TType : class
@@ -68,19 +71,9 @@ namespace ThemeExtensions
             return GetThemeProperty<TType>(helper, propertyName, null);
         }
 
-        public static TType GetThemeProperty<TType>(this HtmlHelper helper, string propertyName, TType defaultValue) where TType : class
-        {
-            return GetThemeProperty(GetTheme(helper), propertyName, defaultValue);
-        }
-
-        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName) 
+        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName)
         {
             return GetThemeBooleanProperty(helper, propertyName, false);
-        }
-
-        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName, bool defaultValue) 
-        {
-            return GetThemeBooleanProperty(GetTheme(helper), propertyName, defaultValue);
         }
 
         public static IEnumerable<AtomEntry> GetTrackBacks(this HtmlHelper helper, FeedModel feedModel)
@@ -104,7 +97,7 @@ namespace ThemeExtensions
 
         public static string GetAvatarUrl(this HtmlHelper helper, string email, int? size)
         {
-            var url = GetUrlHelper(helper);
+            var url = _GetUrlHelper(helper);
             return url.GetGravatarHref(email, size.HasValue ? size.Value : 48)
                    + helper.ViewContext.RequestContext.HttpContext.Request.Url.GetLeftPart(UriPartial.Authority)
                    + url.ImageSrc("noav.png");
@@ -113,14 +106,14 @@ namespace ThemeExtensions
         public static string GetCurrentFeed(this HtmlHelper helper, PageModel pageModel)
         {
             return (pageModel != null && pageModel.Collection != null && pageModel.Collection.Id != null)
-                       ? GetUrlHelper(helper).RouteIdUrl("AtomPubFeed", pageModel.Collection.Id)
+                       ? _GetUrlHelper(helper).RouteIdUrl("AtomPubFeed", pageModel.Collection.Id)
                        : null;
         }
 
         public static string GetCurrentCommentsFeed(this HtmlHelper helper, PageModel pageModel)
         {
             return (pageModel != null && pageModel.Collection != null && pageModel.Collection.Id != null)
-                       ? GetUrlHelper(helper).RouteIdUrl("AnnotateAnnotationsFeed", pageModel.Collection.Id)
+                       ? _GetUrlHelper(helper).RouteIdUrl("AnnotateAnnotationsFeed", pageModel.Collection.Id)
                        : null;
         }
     }
