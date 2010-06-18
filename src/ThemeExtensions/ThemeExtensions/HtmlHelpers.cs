@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using AtomSite.Domain;
 using AtomSite.WebCore;
 
@@ -21,7 +22,7 @@ namespace ThemeExtensions
 
         private static TType GetThemeProperty<TType>(Theme theme, string propertyName, TType defaultValue) where TType : class
         {
-            return theme.GetProperty<TType>(propertyName) ?? defaultValue;
+            return theme.GetValue<TType>(XName.Get(propertyName, Atom.ThemeNs.NamespaceName)) ?? defaultValue;
         }
 
         private static Theme GetTheme(HtmlHelper helper)
@@ -43,8 +44,6 @@ namespace ThemeExtensions
 
             doWithProperty(result);
         }
-
-   
 
         public static string IfThemeProperty<TType>(this HtmlHelper helper, string propertyName, Func<TType, string> doWithProperty) where TType : class
         {
@@ -103,7 +102,7 @@ namespace ThemeExtensions
                        ? GetUrlHelper(helper).RouteIdUrl("AtomPubFeed", pageModel.Collection.Id)
                        : null;
         }
-         
+
         public static string GetCurrentCommentsFeed(this HtmlHelper helper, PageModel pageModel)
         {
             return (pageModel != null && pageModel.Collection != null && pageModel.Collection.Id != null)
