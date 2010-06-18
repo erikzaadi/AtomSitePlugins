@@ -25,6 +25,11 @@ namespace ThemeExtensions
             return theme.GetValue<TType>(XName.Get(propertyName, Atom.ThemeNs.NamespaceName)) ?? defaultValue;
         }
 
+        private static bool GetThemeBooleanProperty(Theme theme, string propertyName, bool defaultValue) 
+        {
+            return theme.GetBooleanWithDefault(XName.Get(propertyName, Atom.ThemeNs.NamespaceName),defaultValue);
+        }
+
         private static Theme GetTheme(HtmlHelper helper)
         {
             var themeName = ThemeViewEngine.GetCurrentThemeName(helper.ViewContext.RequestContext);
@@ -68,6 +73,15 @@ namespace ThemeExtensions
             return GetThemeProperty(GetTheme(helper), propertyName, defaultValue);
         }
 
+        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName) 
+        {
+            return GetThemeBooleanProperty(helper, propertyName, false);
+        }
+
+        public static bool GetThemeBooleanProperty(this HtmlHelper helper, string propertyName, bool defaultValue) 
+        {
+            return GetThemeBooleanProperty(GetTheme(helper), propertyName, defaultValue);
+        }
 
         public static IEnumerable<AtomEntry> GetTrackBacks(this HtmlHelper helper, FeedModel feedModel)
         {
