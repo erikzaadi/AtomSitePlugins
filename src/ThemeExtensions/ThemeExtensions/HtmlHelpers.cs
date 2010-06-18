@@ -50,7 +50,7 @@ namespace ThemeExtensions
             return theme.GetBooleanWithDefault(XName.Get(propertyName, Atom.ThemeNs.NamespaceName), defaultValue);
         }
 
-        public static TType GetThemeProperty<TType>(HtmlHelper helper, string propertyName, TType defaultValue) where TType : class
+        public static TType GetThemeProperty<TType>(this HtmlHelper helper, string propertyName, TType defaultValue) where TType : class
         {
             //traverse scope first
             var service = _GetService(helper);
