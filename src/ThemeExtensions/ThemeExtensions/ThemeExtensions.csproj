@@ -61,15 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internal\HideDefaultMethods.cs" />
     <Compile Include="HtmlHelpers\Social.cs" />
     <Compile Include="HtmlHelpers\Theme.cs" />
-    <Compile Include="HtmlHelpers\IThemeExtensionsHtmlHelper.cs" />
+    <Compile Include="HtmlHelpers\ThemeExtensionsHtmlHelperBase.cs" />
     <Compile Include="HtmlHelpers\Entries.cs" />
     <Compile Include="HtmlHelpers\Date.cs" />
     <Compile Include="HtmlHelpers\ThemeExtensionsHtmlHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UrlHelpers\Entries.cs" />
-    <Compile Include="UrlHelpers\IThemeExtensionsUrlHelper.cs" />
+    <Compile Include="UrlHelpers\ThemeExtensionsUrlHelperBase.cs" />
     <Compile Include="UrlHelpers\Social.cs" />
     <Compile Include="UrlHelpers\ThemeExtensionsUrlHelpers.cs" />
   </ItemGroup>
