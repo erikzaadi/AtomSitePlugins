@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using System.Xml.Linq;
-using AtomSite.Domain;
-using AtomSite.Repository;
-using AtomSite.WebCore;
-using StructureMap;
+﻿using System.Web.Mvc;
 
 namespace ThemeExtensions.UrlHelpers
 {
-    public static class ThemeExtensionsUrlHelpers
+    public static class ThemeExtensionsUrlHelpersExposer
     {
-        public static Social Social(this UrlHelper helper)
+        public static ThemeExtensions ThemeExtensions(this UrlHelper helper)
         {
-            return new Social(helper);
+            return new ThemeExtensions(helper);
         }
+    }
 
-        public static Entries Entries(this UrlHelper helper)
-        {
-            return new Entries(helper);
-        }
+    public class ThemeExtensions : ThemeExtensionsUrlHelperBase
+    {
+        public ThemeExtensions(UrlHelper helper) : base(helper) { }
+
+        public Social Social { get { return new Social(Helper); } }
+        
+        public Entries Entries { get { return new Entries(Helper); } }
     }
 }

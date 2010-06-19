@@ -2,21 +2,24 @@
 
 namespace ThemeExtensions.HtmlHelpers
 {
-    public static class ThemeExtensionsHtmlHelpers
+    public static class ThemeExtensionsHtmlHelpersExposer
     {
-        public static Theme Theme(this HtmlHelper helper)
+        public static ThemeExtensions ThemeExtensions(this HtmlHelper helper)
         {
-            return new Theme(helper);
+            return new ThemeExtensions(helper);
         }
+    }
 
-        public static Entries Entries(this HtmlHelper helper)
-        {
-            return new Entries(helper);
-        }
+    public class ThemeExtensions : ThemeExtensionsHtmlHelperBase
+    {
+        public ThemeExtensions(HtmlHelper helper) : base(helper) { }
 
-        public static Date Date(this HtmlHelper helper)
-        {
-            return new Date(helper);
-        }
+        public Social Social { get { return new Social(Helper); } }
+
+        public Date Date { get { return new Date(Helper); } }
+
+        public Theme Theme { get { return new Theme(Helper); } }
+
+        public Entries Entries { get { return new Entries(Helper); } }
     }
 }
